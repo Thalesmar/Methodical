@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Methodical</title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap"
+        rel="stylesheet">
+    <!-- CSS -->
+    <link rel="stylesheet" href="../styles/today.css">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="site-header">
+        <div class="header-left-side">
+            <a href="../"><h1 class="logo-box">Methodical</h1></a>
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="../">Today</a></li>
+                    <li><a href="#">Upcoming</a></li>
+                    <li><a href="#">settings</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="header-right-side">
+            <div class="search-bar">
+                <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+                <input type="text" id="search-bar-input" placeholder="Search tasks...">
+            </div>
+            <button class="user-profile">YH</button>
+        </div>
+    </header>
+
+    <!-- PAGE LAYOUT -->
+    <div class="dashboard-layout">
+        <!-- side bar-->
+        <aside class="side-bar">
+            <div class="side-bar-top">
+                <h2 class="side-bar-title">Workspace</h2>
+                <p class="side-bar-para">Productivity Flow</p>
+            </div>
+            <nav class="primary-nav">
+                <a href="../index.html" class="side-bar-text">
+                    <i class="fa-solid fa-house"></i>
+                    Home
+                </a>
+                <a href="#" class="side-bar-text">
+                    <i class="fa-solid fa-calendar-week side-bar-icons"></i>
+                    Today
+                </a>
+                <a href="#" class="side-bar-text">
+                    <i class="fa-regular fa-calendar side-bar-icons"></i>
+                    Upcoming
+                </a>
+            </nav>
+
+            <hr class="sidebar-divider">
+
+            <div class="categories">
+                <p class="category-title">Categories</p>
+
+                <div class="category-list">
+                    <a href="#" class="side-bar-text">
+                        <i class="fa-solid fa-user side-bar-icons"></i>
+                        Personal
+                    </a>
+                    <a href="#" class="side-bar-text">
+                        <i class="fa-solid fa-briefcase side-bar-icons"></i>
+                        Work
+                    </a>
+                </div>
+            </div>
+
+
+            <div class="side-bar-bottom">
+                <a class="trash-btn"><i class="fa-solid fa-trash-can"></i>Trash</a>
+            </div>
+        </aside>
+        <!-- MAIN CONTENT -->
+        <main class="main-element-body">
+            <!-- TITLE -->
+            <section class="main-element-header-parent">
+                <time class="main-element-header-date" datetime="2025-10-24">Tuesday, October 24</time>
+                <h2 class="main-element-heading">Today's Flow</h2>
+                <div class="main-element-underline"></div>
+            </section>
+
+            <!-- TOP AREA -->
+            <section class="new-task-container">
+
+                <!-- NEW TASK CARD -->
+                <div class="new-task-area">
+                    <div class="new-task-parent">
+                        <span class="add-icon"><i class="fa-solid fa-plus"></i></span>
+                        <input type="text" id="newTaskInput" placeholder="What needs to be done today?">
+                    </div>
+                    <hr class="input-line">
+
+                    <div class="task-tags-btn">
+                        <div class="tags-area">
+
+                            <span class="task-tags"><i class="fa-solid fa-inbox"></i>Today</span>
+                            <span class="task-tags"><i class="fa-solid fa-flag"></i>Priority</span>
+                        </div>
+                        <button class="new-task-btn">Add Task</button>
+                    </div>
+                </div>
+
+                <!-- PROGRESS CARD -->
+                <div class="progress-container">
+                    <h3 class="progress-heading">Flow Progress</h3>
+                    <p class="progress-para">4 of 12 tasks completed</p>
+
+                    <div class="progress-stat">
+                        <span class="progress-percent">33%</span>
+                        <span class="progress-para">Ahead of schedule</span>
+                    </div>
+
+                    <div class="progress-bar">
+                        <div class="progress-bar-line"></div>
+                    </div>
+                </div>
+
+                <div class="task-list-container">
+                    <div class="task-list-item">
+                        <button class="task-list-btn"><span class="checked"><i class="fa-solid fa-check"></i></span></button>
+                        <div class="task-list-text">
+                            <h4 class="task-list-heading">Finalize Design System Documentation</h4>
+                            <p class="task-list-para">Focus on the tonal architecture section</p>
+                        </div>
+                        <div class="task-list-tags-parent">
+                            <span class="task-list-tags">high</span>
+                        </div>
+                    </div>
+
+                    <div class="task-list-item">
+                        <button class="task-list-btn"><span class="checked"><i class="fa-solid fa-check"></i></span></button>
+                        <div class="task-list-text">
+                            <h4 class="task-list-heading">Quick Catchup with Marketing Team</h4>
+                            <p class="task-list-para">Discuss the upcoming launch campaign</p>
+                        </div>
+
+                        <div class="task-list-tags-parent">
+                            <span class="task-list-tags">Work</span>
+                        </div>
+                    </div>
+
+                    <div class="task-list-item">
+                        <button class="task-list-btn"><span class="checked"><i class="fa-solid fa-check"></i></span></button>
+                        <div class="task-list-text">
+                            <h4 class="task-list-heading">Gym Session - Upper Body</h4>
+                            <p class="task-list-para">Don't forget to track progress in app</p>
+                        </div>
+                        <div class="task-list-tags-parent">
+                            <span class="task-list-tags">Personal</span>
+                        </div>
+                    </div>
+                    <div class="task-list-item">
+                        <button class="task-list-btn"><span class="checked"><i class="fa-solid fa-check"></i></span></button>
+                        <div class="task-list-text">
+                            <h4 class="task-list-heading">Review Weekly Analytics</h4>
+                            <p class="task-list-para">Completed at 9:30 AM</p>
+                        </div>
+                        <div class="task-list-tags-parent">
+                            <span class="task-list-tags"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="coming-up-container">
+                    <h3 class="coming-up-title">Coming Up Next</h3>
+                    <div class="coming-up-body">
+                        <div class="coming-up-line"></div>
+                        <div>
+                            <p class="coming-up-para">Tomorrow, 10:00 AM</p>
+                            <h4 class="coming-up-heading">Client Presentation</h4>
+                        </div>
+                    </div>
+                    <div class="coming-up-body">
+                        <div class="coming-up-line secnd"></div>
+                        <div class="">
+                            <p class="coming-up-para">Thursday, 02:00 PM</p>
+                            <h4 class="coming-up-heading">Grocery Shopping</h4>
+                        </div>
+                    </div>
+                    <button class="coming-up-btn">View Calender</button>
+                </div>
+            </section>
+        </main>
+    </div>
+</body>
+
+</html>
