@@ -12,62 +12,58 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap"
-        rel="stylesheet">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
         href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Manrope:wght@200..800&display=swap"
         rel="stylesheet">
     <!-- CSS -->
+    <link rel="stylesheet" href="./styles/shared.css">
     <link rel="stylesheet" href="./styles/style.css">
 </head>
 
-<body>
+<body data-current-page="home">
 
     <!-- HEADER -->
     <header class="site-header">
-        <button class="menu-toggle">☰</button>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="app-sidebar" aria-label="Open navigation">☰</button>
         <div class="header-left-side">
-            <a href="./"><h1 class="logo-box">Methodical</h1></a>
+            <a href="./index.html" class="logo-box">Methodical</a>
             <nav class="nav">
                 <ul class="nav-list">
-                    <li><a href="./pages/today.html">Today</a></li>
-                    <li><a href="#">Upcoming</a></li>
-                    <li><a href="#">settings</a></li>
+                    <li><a href="./index.html" data-page-key="home" aria-current="page">Home</a></li>
+                    <li><a href="./pages/today.html" data-page-key="today">Today</a></li>
+                    <li><a href="./pages/personal.html" data-page-key="personal">Personal</a></li>
                 </ul>
             </nav>
         </div>
         <div class="header-right-side">
-            <div class="search-bar">
+            <div class="search-bar" role="search">
                 <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
-                <input type="text" id="search-bar-input" placeholder="Search tasks...">
+                <input type="text" id="search-bar-input" placeholder="Search tasks..." aria-label="Search tasks">
             </div>
-            <button class="user-profile">YH</button>
+            <button class="user-profile" type="button" aria-label="Open profile">YH</button>
         </div>
     </header>
 
     <!-- PAGE LAYOUT -->
     <div class="dashboard-layout">
         <!-- side bar-->
-        <aside class="side-bar">
+        <aside class="side-bar" id="app-sidebar" aria-label="Sidebar">
             <div class="side-bar-top">
                 <h2 class="side-bar-title">Workspace</h2>
                 <p class="side-bar-para">Productivity Flow</p>
             </div>
             <nav class="primary-nav">
-                <a href="./pages/today.html" class="side-bar-text">
+                <a href="./index.html" class="side-bar-text" data-page-key="home" aria-current="page">
                     <i class="fa-solid fa-house"></i>
                     Home
                 </a>
-                <a href="./pages/today.html" class="side-bar-text">
+                <a href="./pages/today.html" class="side-bar-text" data-page-key="today">
                     <i class="fa-solid fa-calendar-week side-bar-icons"></i>
                     Today
                 </a>
-                <a href="#" class="side-bar-text">
+                <button class="side-bar-text is-disabled" type="button" disabled aria-disabled="true">
                     <i class="fa-regular fa-calendar side-bar-icons"></i>
                     Upcoming
-                </a>
+                </button>
             </nav>
 
             <hr class="sidebar-divider">
@@ -76,14 +72,14 @@
                 <p class="category-title">Categories</p>
 
                 <div class="category-list">
-                    <a href="#" class="side-bar-text">
+                    <a href="./pages/personal.html" class="side-bar-text" data-page-key="personal">
                         <i class="fa-solid fa-user side-bar-icons"></i>
                         Personal
                     </a>
-                    <a href="#" class="side-bar-text">
+                    <button class="side-bar-text is-disabled" type="button" disabled aria-disabled="true">
                         <i class="fa-solid fa-briefcase side-bar-icons"></i>
                         Work
-                    </a>
+                    </button>
                 </div>
             </div>
 
@@ -95,13 +91,17 @@
             </div>
 
             <div class="side-bar-bottom">
-                <a class="trash-btn"><i class="fa-solid fa-trash-can"></i>Trash</a>
+                <button class="trash-btn" type="button" data-page-key="trash">
+                    <i class="fa-solid fa-trash-can"></i>
+                    Trash
+                </button>
             </div>
         </aside>
 
-        <main class="main-element">
+        <main class="page-main">
             <section class="hero-section">
                 <h1 class="hero-heading">Good Morning, <span class="heading-right-part">Julian Throne.</span></h1>
+                <div class="main-element-underline"></div>
                 <p class="hero-para">Your mindful workspace is ready. You have 4 tasks scheduled for your deep focus block today.</p>
             </section>
             <section class="cards-section-grid">
@@ -144,9 +144,9 @@
                 <div class="feature-left-section">
                     <div class="feature-text-section">
                         <span class="feature-title">Innovation</span>
-                        <h4 class="feature-heading">Mindful Productivity</h4>
+                        <h2 class="feature-heading">Mindful Productivity</h2>
                         <p class="feature-para">Experience a workspace that adapts to your cognitive load. No clutter, no noise—just pure focus.</p>
-                        <button class="try-btn">Try Methodical Now <i class="fa-solid fa-arrow-right"></i></button>
+                        <button class="try-btn" type="button">Try Methodical Now <i class="fa-solid fa-arrow-right"></i></button>
                     </div>
                     <div class="feature-img-section">
                         <img src="./assets/unnamed.png" class="feature-img-styles" alt="Minimal workspace desk setup">
@@ -155,7 +155,7 @@
                 <div class="feature-right-section">
                     <span class="leaf-icon"><i class="fa-solid fa-leaf"></i></span>
                     <div class="feature-right-bottom">
-                        <h4 class="feature-right-heading">Elegant Organization</h4>
+                        <h2 class="feature-right-heading">Elegant Organization</h2>
                         <span class="feature-right-para">Automatic categorization that feels like magic.</span>
                     </div>
                 </div>
@@ -2150,7 +2150,7 @@
 
             <section class="recent-activity-container">
                 <div class="recent-activity-left">
-                    <h4 class="activity-heading">Recent Activity</h4>
+                    <h2 class="activity-heading">Recent Activity</h2>
                     <ul class="activity-list-parent">
                         <li class="activity-list">
                             <div class="activity-dots green"></div>
@@ -2177,9 +2177,9 @@
                 </div>
 
                 <div class="activity-img-container">
-                    <img src="./assets/unnamed (1).png" class="activity-img" alt="">
+                    <img src="./assets/unnamed (1).png" class="activity-img" alt="A quiet reading nook used to illustrate focused work">
                     <div class="activity-img-text">
-                        <h4 class="activity-img-heading">The Art of Deep Work</h4>
+                        <h2 class="activity-img-heading">The Art of Deep Work</h2>
                         <p class="activity-img-para">
                             Methodical isn't just a tool; it's a philosophy. We believe that clarity of environment leads to clarity
                             of mind.
