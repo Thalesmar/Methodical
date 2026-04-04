@@ -1,26 +1,9 @@
-function initLogoSlider() {
-    const tracks = document.querySelectorAll(".logo-track");
+const sideBar = document.querySelector(".side-bar");
+const menuToggle = document.querySelector(".menu-toggle");
 
-    tracks.forEach((track) => {
-        if (track.dataset.sliderReady === "true") {
-            return;
-        }
-
-        const logos = Array.from(track.children);
-
-        logos.forEach((logo) => {
-            const clone = logo.cloneNode(true);
-            clone.setAttribute("aria-hidden", "true");
-            track.appendChild(clone);
-        });
-
-        track.dataset.sliderReady = "true";
-        track.classList.add("is-ready");
-    });
+const handleSideBarBtn = () => {
+    sideBar.classList.toggle('side-bar-mobile-style');
+    // sideBar.classList.add("side-bar-mobile-style");
 }
 
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initLogoSlider, { once: true });
-} else {
-    initLogoSlider();
-}
+menuToggle.addEventListener("click", handleSideBarBtn);
