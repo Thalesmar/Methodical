@@ -13,6 +13,8 @@
     --shadow-soft: 0 2px 6px rgba(15, 23, 42, 0.03);
     --radius-sm: 6px;
     --radius-md: 10px;
+    --header-height: 78px;
+    --sidebar-width: 230px;
 }
 
 /* =========================
@@ -31,6 +33,7 @@ body {
     font-family: "Google Sans", Arial, sans-serif;
     color: var(--text-main);
     background: var(--bg-page);
+    overflow-x: hidden;
 }
 
 a {
@@ -46,13 +49,15 @@ a {
     top: 0;
     left: 0;
     width: 100%;
+    height: var(--header-height);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1.2rem 2rem;
+    padding: 0 2rem;
     background: var(--bg-card);
     border-bottom: 1px solid var(--border-soft);
     box-shadow: 0 4px 10px var(--border-soft);
+    z-index: 1000;
 }
 
 .header-left-side,
@@ -147,21 +152,29 @@ a {
 .dashboard-layout {
     display: flex;
     min-height: 100vh;
+    padding-top: var(--header-height);
 }
 
 .side-bar {
-    width: 230px;
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    width: var(--sidebar-width);
+    height: calc(100vh - var(--header-height));
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     padding: 20px;
     background: var(--bg-side-bar);
-    margin-top : 1rem;
+    border-right: 1px solid var(--border-soft);
 }
 
 .main-element-body {
     flex: 1;
     min-height: 100vh;
-    padding-top: 3rem;
+    min-width: 0;
+    margin-left: var(--sidebar-width);
+    padding: 3rem 2rem 2rem;
 }
 
 /* =========================
@@ -169,7 +182,6 @@ a {
 ========================= */
 .side-bar-top {
     margin-bottom: 1.5rem;
-    margin-top: 4rem;
 }
 
 .side-bar-title {
@@ -624,4 +636,24 @@ a {
 
 .coming-up-btn:hover {
     background: var(--bg-card);
+}
+
+@media (max-width: 960px) {
+    .dashboard-layout {
+        display: block;
+    }
+
+    .side-bar {
+        position: static;
+        width: 100%;
+        height: auto;
+        overflow: visible;
+        border-right: none;
+        border-bottom: 1px solid var(--border-soft);
+    }
+
+    .main-element-body {
+        margin-left: 0;
+        padding: 2rem 1.25rem;
+    }
 }

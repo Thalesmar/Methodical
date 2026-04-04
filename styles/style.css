@@ -15,6 +15,8 @@
     --radius-sm: 6px;
     --radius-md: 10px;
     --radius-lg: 20px;
+    --header-height: 76px;
+    --sidebar-width: 300px;
 }
 
 /* =========================
@@ -55,7 +57,7 @@ svg {
     top: 0;
     left: 0;
     width: 100%;
-    height: 76px;
+    height: var(--header-height);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -84,7 +86,7 @@ svg {
 .logo-box {
     font-size: 1.9rem;
     font-weight: 700;
-    color: var(--accent);
+    color: var(--primary-start);
     line-height: 1;
 }
 
@@ -165,11 +167,16 @@ svg {
 .dashboard-layout {
     display: flex;
     min-height: 100vh;
-    padding-top: 76px;
+    padding-top: var(--header-height);
 }
 
 .side-bar {
-    width: 265px;
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    width: var(--sidebar-width);
+    height: calc(100vh - var(--header-height));
+    overflow-y: auto;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
@@ -181,7 +188,11 @@ svg {
 .main-element {
     flex: 1;
     min-height: 100vh;
-    padding: 2.25rem 2rem 2rem;
+    min-width: 0;
+    margin-left: var(--sidebar-width);
+    padding-left: 2rem;
+    padding-right: 2rem;
+    padding-top: 2rem;
     overflow-x: hidden;
 }
 
@@ -273,7 +284,7 @@ svg {
     align-items: center;
     justify-content: center;
     gap: 0.45rem;
-    width: 100%;
+    width: 95%;
     padding: 0.85rem 1rem;
     border: none;
     border-radius: 10px;
@@ -563,7 +574,7 @@ svg {
     width: 100%;
     max-width: 100%;
     overflow: hidden;
-    margin-top: 2.75rem ;
+    /* margin-top: 2.75rem ; */
 }
 
 .logo-track {
@@ -598,3 +609,261 @@ svg {
         transform: translateX(calc(-50% - 30px));
     }
 }
+
+/*  */
+
+.recent-activity-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    align-items: flex-start;
+    margin-top: 2.75rem;
+    box-shadow: 0 10px 10px var(--shadow-soft);
+    gap: 20px;
+}
+
+.recent-activity-left {
+    height: 400px;
+    padding: 2rem 3rem;
+    background: var(--bg-card);
+    border-radius: 20px;
+    border: 1px solid var(--border-soft);
+}
+
+.activity-heading {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    font-weight: 700;
+    font-family: Manrope;
+    margin: 0;
+}
+
+.activity-list-parent {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0 0 0;
+}
+
+.activity-list {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.activity-info {
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-direction: column;
+    /* gap: 10px; */
+}
+
+.activity-dots {
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    flex-shrink: 0;
+}
+
+.green{
+    background: var(--accent);
+}
+
+.blue{
+    background: rgb(0 104 122);
+}
+
+.red{
+    background: rgb(144 73 0);
+}
+
+.activity-list-para{
+    font-weight: 600;
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+}
+
+.activity-list-description{
+    font-size: 0.75rem;
+    line-height: 1rem;
+    color: rgb(70 69 84);
+}
+
+.activity-img-container {
+    position: relative;
+    /* width: 100%; */
+    overflow: hidden;
+    border-radius: 20px;
+}
+
+.activity-img {
+    display: block;
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 20px;
+    /* this is responsible for image zoom in and out */
+    transition: transform 0.4s ease;
+}
+
+.activity-img-container:hover .activity-img {
+    transform: scale(1.1);
+}
+
+.activity-img-text {
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    color: white;
+    gap: 20px;
+    z-index: 2;
+}
+
+.activity-img-heading {
+    color: rgb(255 255 255);
+    font-size: 2.25rem;
+    line-height: 2.5rem;
+    font-weight: 700;
+    margin: 0;
+}
+
+.activity-img-para {
+    font-size: 1rem;
+    opacity: 0.7;
+    max-width: 28rem;
+    line-height: 1.7rem;
+    color: rgb(255 255 255);
+    margin: 0;
+}
+
+/*  */
+
+.our-philosophy-container{
+    max-width: 48rem;
+    margin: auto;
+    gap: 0.25rem;
+    margin-top: 6rem;
+    text-align: center;
+}
+
+.philosophy-lines{
+    display: flex;
+    justify-content: center;
+    gap: 0.25rem;
+    margin-bottom: 2rem;
+}
+
+.first-line-1,
+.first-line-2,
+.first-line-3{
+    border-radius: 9999px;
+    width: 0.25rem;
+    height: 8rem;
+    background: var(--accent);
+    overflow: hidden;
+}
+
+.first-line-2{
+    margin-top: 1rem;
+}
+
+.first-line-3 {
+        margin-top: -1rem;
+}
+
+.sec-line-1,
+.sec-line-2,
+.sec-line-3{
+    background: rgb(76 215 246);
+}
+
+.sec-line-1{
+    width: auto;
+    height: 40%;
+}
+
+.sec-line-2 {
+    width: auto;
+    height: 60%;
+}
+
+.sec-line-3 {
+    width: auto;
+    height: 20%;
+}
+
+.philosophy-heading-section{
+    display: flex;
+    flex-direction: column;
+}
+
+.philosophy-heading{
+    font-style: italic;
+    font-size: 1.875rem;
+    line-height: 2.25rem;
+    font-weight: 700;
+    font-family: Manrope;
+}
+
+.philosophy-heading-para{
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 0.75rem;
+    line-height: 1rem;
+    padding-top: 3rem;
+    color: var();
+}
+
+/*  */
+
+.footer{
+    display: inline-flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 4rem;
+    padding: 2rem;
+    letter-spacing: 0.1em;
+    color: rgb(70 69 84);
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 10px;
+}
+
+.footer-list{
+    display: flex;
+    gap: 10px;
+    list-style: none;
+    cursor: pointer;
+}
+
+.footer-list-style:hover{
+    color: var(--primary-end);
+}
+
+/* @media (max-width: 960px) {
+    .dashboard-layout {
+        display: block;
+    }
+
+    .side-bar {
+        position: static;
+        width: 100%;
+        height: auto;
+        overflow: visible;
+        border-right: none;
+        border-bottom: 1px solid var(--border-soft);
+    }
+
+    .main-element {
+        margin-left: 0;
+        padding-left: 1.25rem;
+        padding-right: 1.25rem;
+    }
+} */
