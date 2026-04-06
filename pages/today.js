@@ -1,18 +1,27 @@
+// SELECT ELEMENTS FROM DOM
+
+// Task elements
 const newTaskContainer = document.querySelector(".task-list-container");
 const taskInput = document.getElementById("newTaskInput");
 const addNewTaskBtn = document.querySelector(".new-task-btn");
 const warningMsg = document.getElementById("taskWarning");
 const dateInput = document.getElementById("dateTimePicker");
 const priorityInput = document.getElementById("priorityOptions");
+// Progress elements
+const currentFlowProgress = document.querySelector(".progress-percent");
+const completedText = document.querySelector(".progress-para");
+const progressBar = document.querySelector(".progress-bar-line");
 
-
+//LOAD DATA FROM LOCAL STORAGE
 const savedTasksData = JSON.parse(localStorage.getItem("savedData"));
 const tasks = savedTasksData || [];
 
+// SAVE DATA TO LOCAL STORAGE
 const storageFunc = () => {
     localStorage.setItem("savedData", JSON.stringify(tasks));
 };
 
+//RENDER TASKS (DISPLAY UI)
 const renderTask = () => {
     let newTaskRender = "";
 
@@ -35,7 +44,7 @@ const renderTask = () => {
                 </div>
                 <div class="task-list-right">
                     <div class="task-list-tags-parent">
-                        <span class="task-list-tags-text">${task.taskPriority}</span>
+                        <span class="task-list-tags-text">${task.taskPriority.charAt(0).toUpperCase() + task.taskPriority.slice(1)}</span>
                     </div>
                     <div class="del-btn-parent">
                         <button class="del-btn task-del-btn" type="button" aria-label="Delete task"><i class="fa-solid fa-trash"></i>
@@ -46,16 +55,19 @@ const renderTask = () => {
     });
 
     newTaskContainer.innerHTML = newTaskRender;
-
+    // update progress after rendering
+    calculateProgress();
 };
 
+// ADD NEW TASK
 const displayNewTask = () => {
     const newTaskValue = taskInput.value.trim();
     const newDateValue = dateInput.value.trim();
     const newPriorityValue = priorityInput.value.trim();
 
-    if (!newTaskValue) {
-        warningMsg.textContent = "Add a task and time";
+    // Validation of data
+    if (!newTaskValue || !newPriorityValue) {
+        warningMsg.textContent = "Add a task and select a priority";
         warningMsg.classList.add("task-warning-text");
 
         setTimeout(() => {
@@ -66,44 +78,57 @@ const displayNewTask = () => {
         return;
     }
 
+    // Create new task object
     const newTask = {
         taskTitle: newTaskValue,
         taskDateTime: newDateValue,
-        taskPriority : newPriorityValue,
+        taskPriority: newPriorityValue,
         done: false,
     };
 
-    console.log(newPriorityValue);
-
+    // console.log(newPriorityValue);
+    // Add to array
     tasks.push(newTask);
+    // Save + render
     storageFunc();
     renderTask();
 
+    // Reset inputs
     taskInput.value = "";
     dateInput.value = "";
-    // priorityInput.value = "";
+    priorityInput.selectedIndex = 0;
+
 };
 
-renderTask();
 
 //calculating and updating task progress
-const progressContainer = document.querySelector(".progress-container");
-const currentFlowProgress = document.querySelector(".progress-percent");
-const completedText = document.querySelector(".progress-para");
-const progressBar = document.querySelector(".progress-bar");
-
 const calculateProgress = () => {
-    
+    //get how many tasks we got
+    const totalTasks = tasks.length;
+    // console.log(totalTasks); // 2 so far
+    //then we get only done tasks from the array of tasks
+    const doneTasks = tasks.filter((task) => task.done).length;
+    console.log(doneTasks);
+
+    updateProgressContainer(doneTasks, totalTasks);
 };
 
-//progress
+//UPDATE PROGRESS UI
 // we need 2 params doneTasks : how many task finished and totalTask : how many tasks in total.
 const updateProgressContainer = (doneTasks, totalTasks) => {
+    // Avoid division by 0
+    const percent =
+        totalTasks === 0 ? 0 : Math.round((doneTasks / totalTasks) * 100);
 
-
+    // Update text
+    completedText.textContent = `${doneTasks} of ${totalTasks} tasks completed`;
+    // Update percentage text
+    currentFlowProgress.textContent = `${percent}%`;
+    // Update progress bar width
+    progressBar.style.width = `${percent}%`;
 };
 
-
+// EVENT DELEGATION (DONE BUTTON)
 //we listen to the parent
 newTaskContainer.addEventListener("click", (event) => {
     //and we detect which child was clicked
@@ -123,10 +148,11 @@ newTaskContainer.addEventListener("click", (event) => {
     storageFunc();
     renderTask();
 });
-
+//ADD TASK BUTTON
 addNewTaskBtn.addEventListener("click", displayNewTask);
 
-newTaskContainer.addEventListener('click', (event) => {
+//DELETE TASK (EVENT DELEGATION)
+newTaskContainer.addEventListener("click", (event) => {
     const delBtnStyle = document.querySelector(".del-btn");
 
     const taskItem = event.target.closest(".task-list-item");
@@ -136,12 +162,14 @@ newTaskContainer.addEventListener('click', (event) => {
 
     const deleteBtn = event.target.closest(".del-btn");
 
-    if (deleteBtn){
+    if (deleteBtn) {
         tasks.splice(index, 1);
         storageFunc();
         renderTask();
     }
 
     //Save + re - render;
-
 });
+
+//NITIAL RENDER ON LOAD
+renderTask();
