@@ -1,0 +1,147 @@
+const newTaskContainer = document.querySelector(".task-list-container");
+const taskInput = document.getElementById("newTaskInput");
+const addNewTaskBtn = document.querySelector(".new-task-btn");
+const warningMsg = document.getElementById("taskWarning");
+const dateInput = document.getElementById("dateTimePicker");
+const priorityInput = document.getElementById("priorityOptions");
+
+
+const savedTasksData = JSON.parse(localStorage.getItem("savedData"));
+const tasks = savedTasksData || [];
+
+const storageFunc = () => {
+    localStorage.setItem("savedData", JSON.stringify(tasks));
+};
+
+const renderTask = () => {
+    let newTaskRender = "";
+
+    tasks.forEach((task, index) => {
+        const time = new Date(task.taskDateTime).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+
+        newTaskRender += `
+            <li class="task-list-item ${task.done ? "done" : ""}" data-index="${index}">
+                <button class="task-list-btn" type="button" aria-label="Mark task as complete">
+                    <span class="checked"><i class="fa-solid fa-check"></i></span>
+                </button>
+                <div class="task-list-text">
+                    <h3 class="task-list-heading">${task.taskTitle}</h3>
+                    <span class="task-list-date">
+                        <i class="fa-solid fa-clock"></i> ${time}
+                    </span>
+                </div>
+                <div class="task-list-right">
+                    <div class="task-list-tags-parent">
+                        <span class="task-list-tags-text">${task.taskPriority}</span>
+                    </div>
+                    <div class="del-btn-parent">
+                        <button class="del-btn task-del-btn" type="button" aria-label="Delete task"><i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </li>`;
+    });
+
+    newTaskContainer.innerHTML = newTaskRender;
+
+};
+
+const displayNewTask = () => {
+    const newTaskValue = taskInput.value.trim();
+    const newDateValue = dateInput.value.trim();
+    const newPriorityValue = priorityInput.value.trim();
+
+    if (!newTaskValue) {
+        warningMsg.textContent = "Add a task and time";
+        warningMsg.classList.add("task-warning-text");
+
+        setTimeout(() => {
+            warningMsg.textContent = "";
+            warningMsg.classList.remove("task-warning-text");
+        }, 3000);
+
+        return;
+    }
+
+    const newTask = {
+        taskTitle: newTaskValue,
+        taskDateTime: newDateValue,
+        taskPriority : newPriorityValue,
+        done: false,
+    };
+
+    console.log(newPriorityValue);
+
+    tasks.push(newTask);
+    storageFunc();
+    renderTask();
+
+    taskInput.value = "";
+    dateInput.value = "";
+    // priorityInput.value = "";
+};
+
+renderTask();
+
+//calculating and updating task progress
+const progressContainer = document.querySelector(".progress-container");
+const currentFlowProgress = document.querySelector(".progress-percent");
+const completedText = document.querySelector(".progress-para");
+const progressBar = document.querySelector(".progress-bar");
+
+const calculateProgress = () => {
+    
+};
+
+//progress
+// we need 2 params doneTasks : how many task finished and totalTask : how many tasks in total.
+const updateProgressContainer = (doneTasks, totalTasks) => {
+
+
+};
+
+
+//we listen to the parent
+newTaskContainer.addEventListener("click", (event) => {
+    //and we detect which child was clicked
+    //"Go up from the clicked element until you find .task-list-btn"
+    const btn = event.target.closest(".task-list-btn");
+    //if not ignore click
+    if (!btn) return;
+
+    //Find the parent task item
+    const taskItem = btn.closest(".task-list-item");
+    //Get which task this is
+    const index = taskItem.dataset.index;
+
+    //Toggle done/undone
+    tasks[index].done = !tasks[index].done;
+    //Save + re - render;
+    storageFunc();
+    renderTask();
+});
+
+addNewTaskBtn.addEventListener("click", displayNewTask);
+
+newTaskContainer.addEventListener('click', (event) => {
+    const delBtnStyle = document.querySelector(".del-btn");
+
+    const taskItem = event.target.closest(".task-list-item");
+    if (!taskItem) return;
+
+    const index = taskItem.dataset.index;
+
+    const deleteBtn = event.target.closest(".del-btn");
+
+    if (deleteBtn){
+        tasks.splice(index, 1);
+        storageFunc();
+        renderTask();
+    }
+
+    //Save + re - render;
+
+});

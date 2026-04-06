@@ -1,10 +1,17 @@
+//this var for width 808px and below will be considered mobile viewport
 const MOBILE_BREAKPOINT = 808;
 
-function isMobileViewport() {
+//is it the current screen width mobile size
+const isMobileViewport = () => {
+    // matchMedia checks a css media query in js and  return true or false
+    //so it check if screen width is less than or equal to 808px and return true if it is and false if it is not
+    //If screen width is 700px: isMobileViewport(); true
+    //If screen width is 1200px: isMobileViewport(); false
     return window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`).matches;
-}
+    //this function ask if we are in mobile
+};
 
-function getOverlay() {
+const getOverlay = () => {
     let overlay = document.querySelector(".sidebar-overlay");
 
     if (!overlay) {
@@ -19,7 +26,7 @@ function getOverlay() {
     return overlay;
 }
 
-function getNavigationElements() {
+const getNavigationElements =() => {
     return {
         sideBar: document.querySelector(".side-bar"),
         menuToggle: document.querySelector(".menu-toggle"),

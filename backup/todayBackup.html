@@ -20,7 +20,8 @@
 
 <body data-current-page="today">
     <header class="site-header">
-        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="app-sidebar" aria-label="Open navigation">☰</button>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="app-sidebar"
+            aria-label="Open navigation">☰</button>
         <div class="header-left-side">
             <a href="../index.html" class="logo-box">Methodical</a>
             <nav class="nav">
@@ -98,7 +99,8 @@
                 <time class="main-element-header-date" data-current-date="long"></time>
                 <h1 class="main-element-heading">Today's Flow</h1>
                 <div class="main-element-underline"></div>
-                <p class="main-element-subtitle">A clean view of the tasks, momentum, and next events shaping your day.</p>
+                <p class="main-element-subtitle">A clean view of the tasks, momentum, and next events shaping your day.
+                </p>
             </section>
 
             <section class="new-task-container">
@@ -113,10 +115,11 @@
                     <div class="task-tags-btn">
                         <div class="tags-area" aria-label="Task tags">
                             <label class="visually-hidden" for="dateTimePicker">Choose a due date and time</label>
-                            <input type="datetime-local" class="task-tags" id="dateTimePicker" aria-label="Choose a due date and time">
+                            <input type="datetime-local" class="task-tags" id="dateTimePicker"
+                                aria-label="Choose a due date and time">
                             <span class="task-tags"><i class="fa-solid fa-flag"></i>
+                                <label class="visually-hidden" for="priorityOptions">Choose a task tag</label>
                                 <select name="taskTag" id="priorityOptions" aria-label="Choose a task tag">
-                                    <option value="" disabled selected>Priority</option>
                                     <option value="high">High</option>
                                     <option value="personal">Personal</option>
                                     <option value="work">Work</option>
@@ -230,7 +233,7 @@
     </div>
 
     <script src="../index.js"></script>
-    <script src="./today.js"></script>
+    <script src="./todayBackup.js"></script>
 </body>
 
 </html>
