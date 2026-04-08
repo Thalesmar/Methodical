@@ -283,13 +283,12 @@
 .done .task-list-tags-parent {
     opacity: 0.6;
     text-decoration: line-through;
-    border: 1px solid var(--text-muted);
     background: rgb(242, 244, 246);
 }
 
 .done .task-list-btn {
     background: var(--checked-task-bg);
-    color: white;
+    color: black;
     border: none;
 }
 
@@ -510,7 +509,12 @@
     min-width: 5.25rem;
     padding: 0.45rem 0.8rem;
     border-radius: var(--radius-md);
-    background: rgb(57 251 244);
+    background: rgb(222, 255, 254);
+}
+
+.task-list-tags{
+    font-size: 1rem;
+    font-weight: bold;
 }
 
 .task-list-tags-parent.is-high {
@@ -632,6 +636,7 @@
     padding: 0.7rem 1.3rem;
     color: white;
     font-size: 0.92rem;
+    text-align: center;
     font-weight: 600;
     background: linear-gradient(135deg, #ff1852, #ff96a3);
 

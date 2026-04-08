@@ -1,16 +1,23 @@
+// SELECT ELEMENTS FROM DOM
+import { calculateProgress, updateProgressContainer } from "../utils/progress.js";
+// Task elements
 const newTaskContainer = document.querySelector(".task-list-container");
 const taskInput = document.getElementById("newTaskInput");
 const addNewTaskBtn = document.querySelector(".new-task-btn");
 const warningMsg = document.getElementById("taskWarning");
 const dateInput = document.getElementById("dateTimePicker");
+const priorityInput = document.getElementById("priorityOptions");
 
+//LOAD DATA FROM LOCAL STORAGE
 const savedTasksData = JSON.parse(localStorage.getItem("savedData"));
 const tasks = savedTasksData || [];
 
+// SAVE DATA TO LOCAL STORAGE
 const storageFunc = () => {
     localStorage.setItem("savedData", JSON.stringify(tasks));
 };
 
+//RENDER TASKS (DISPLAY UI)
 const renderTask = () => {
     let newTaskRender = "";
 
@@ -33,7 +40,7 @@ const renderTask = () => {
                 </div>
                 <div class="task-list-right">
                     <div class="task-list-tags-parent">
-                        <span class="task-list-tags">High</span>
+                        <span class="task-list-tags-text">${task.taskPriority.charAt(0).toUpperCase() + task.taskPriority.slice(1)}</span>
                     </div>
                     <div class="del-btn-parent">
                         <button class="del-btn task-del-btn" type="button" aria-label="Delete task"><i class="fa-solid fa-trash"></i>
@@ -44,14 +51,25 @@ const renderTask = () => {
     });
 
     newTaskContainer.innerHTML = newTaskRender;
+    // update progress after rendering
+    renderProgress();
 };
 
-const displayNewTask = () => {
+const renderProgress = () => {
+    const { doneTasks, totalTasks } = calculateProgress(tasks);
+
+    updateProgressContainer(doneTasks, totalTasks);
+};
+
+// ADD NEW TASK
+export const displayNewTask = () => {
     const newTaskValue = taskInput.value.trim();
     const newDateValue = dateInput.value.trim();
+    const newPriorityValue = priorityInput.value.trim();
 
-    if (!newTaskValue) {
-        warningMsg.textContent = "Add a task and time";
+    // Validation of data
+    if (!newTaskValue || !newPriorityValue) {
+        warningMsg.textContent = "Add a task and select a priority";
         warningMsg.classList.add("task-warning-text");
 
         setTimeout(() => {
@@ -62,22 +80,28 @@ const displayNewTask = () => {
         return;
     }
 
+    // Create new task object
     const newTask = {
         taskTitle: newTaskValue,
         taskDateTime: newDateValue,
+        taskPriority: newPriorityValue,
         done: false,
     };
 
+    // console.log(newPriorityValue);
+    // Add to array
     tasks.push(newTask);
+    // Save + render
     storageFunc();
     renderTask();
 
+    // Reset inputs
     taskInput.value = "";
     dateInput.value = "";
+    priorityInput.selectedIndex = 0;
 };
 
-renderTask();
-
+// EVENT DELEGATION (DONE BUTTON)
 //we listen to the parent
 newTaskContainer.addEventListener("click", (event) => {
     //and we detect which child was clicked
@@ -97,10 +121,11 @@ newTaskContainer.addEventListener("click", (event) => {
     storageFunc();
     renderTask();
 });
-
+//ADD TASK BUTTON
 addNewTaskBtn.addEventListener("click", displayNewTask);
 
-newTaskContainer.addEventListener('click', (event) => {
+//DELETE TASK (EVENT DELEGATION)
+newTaskContainer.addEventListener("click", (event) => {
     const delBtnStyle = document.querySelector(".del-btn");
 
     const taskItem = event.target.closest(".task-list-item");
@@ -110,12 +135,14 @@ newTaskContainer.addEventListener('click', (event) => {
 
     const deleteBtn = event.target.closest(".del-btn");
 
-    if (deleteBtn){
+    if (deleteBtn) {
         tasks.splice(index, 1);
         storageFunc();
         renderTask();
     }
 
     //Save + re - render;
-
 });
+
+//NITIAL RENDER ON LOAD
+renderTask();

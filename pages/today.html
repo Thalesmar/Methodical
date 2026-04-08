@@ -113,7 +113,7 @@
                     <div class="task-tags-btn">
                         <div class="tags-area" aria-label="Task tags">
                             <label class="visually-hidden" for="dateTimePicker">Choose a due date and time</label>
-                            <input type="datetime-local" class="task-tags" id="dateTimePicker" aria-label="Choose a due date and time">
+                            <input type="time" class="task-tags" id="timePicker" aria-label="Choose a due date and time">
                             <span class="task-tags"><i class="fa-solid fa-flag"></i>
                                 <select name="taskTag" id="priorityOptions" aria-label="Choose a task tag">
                                     <option value="" disabled selected>Priority</option>
@@ -124,15 +124,15 @@
                         </div>
                         <button class="new-task-btn" type="button">Add Task</button>
                     </div>
-                    <p id="taskWarning" aria-live="polite"></p>
                 </div>
+
                 <div class="progress-container">
                     <h2 class="progress-heading">Flow Progress</h2>
                     <p class="progress-para" data-progress-summary>0 of 0 tasks completed</p>
 
                     <div class="progress-stat">
                         <span class="progress-percent" data-progress-percent>0%</span>
-                        <span class="progress-para" data-progress-status>Add your first task</span>
+                        <span class="progress-para" data-progress-status></span>
                     </div>
 
                     <div class="progress-bar" aria-hidden="true">
@@ -219,6 +219,7 @@
 
             <footer class="footer">
                 <p class="footer-signature">Thales © 2026</p>
+                <p id="taskWarning" aria-live="polite"></p>
                 <ul class="footer-list">
                     <li class="footer-list-style">Privacy</li>
                     <li class="footer-list-style">Documentation</li>
@@ -228,8 +229,8 @@
         </main>
     </div>
 
-    <script src="../index.js"></script>
-    <script src="./today.js"></script>
+    <script type="module" src="../index.js"></script>
+    <script type="module" src="./today.js"></script>
 </body>
 
 </html>

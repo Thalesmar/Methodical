@@ -1,14 +1,14 @@
-//this var for width 808px and below will be considered mobile viewport
+import { calculateProgress, getProgressPercentage } from "./utils/progress.js";
+
+//LOAD DATA FROM LOCAL STORAGE
+const savedTasksData = JSON.parse(localStorage.getItem("savedInputsData") || "[]");
+const tasks = Array.isArray(savedTasksData) ? savedTasksData : [];
+
+// this var for width 808px and below will be considered mobile viewport
 const MOBILE_BREAKPOINT = 808;
 
-//is it the current screen width mobile size
 const isMobileViewport = () => {
-    // matchMedia checks a css media query in js and  return true or false
-    //so it check if screen width is less than or equal to 808px and return true if it is and false if it is not
-    //If screen width is 700px: isMobileViewport(); true
-    //If screen width is 1200px: isMobileViewport(); false
     return window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`).matches;
-    //this function ask if we are in mobile
 };
 
 const getOverlay = () => {
@@ -24,15 +24,15 @@ const getOverlay = () => {
     }
 
     return overlay;
-}
+};
 
-const getNavigationElements =() => {
+const getNavigationElements = () => {
     return {
         sideBar: document.querySelector(".side-bar"),
         menuToggle: document.querySelector(".menu-toggle"),
         overlay: getOverlay(),
     };
-}
+};
 
 function setSidebarState(isOpen, elements) {
     const { sideBar, menuToggle, overlay } = elements;
@@ -50,7 +50,10 @@ function setSidebarState(isOpen, elements) {
         shouldOpen ? "Close navigation" : "Open navigation",
     );
 
-    sideBar.setAttribute("aria-hidden", String(isMobileViewport() && !shouldOpen));
+    sideBar.setAttribute(
+        "aria-hidden",
+        String(isMobileViewport() && !shouldOpen),
+    );
     overlay.setAttribute("aria-hidden", String(!shouldOpen));
 }
 
@@ -89,7 +92,10 @@ function formatDate(date, variant) {
         short: { month: "short", day: "numeric" },
     };
 
-    return new Intl.DateTimeFormat(undefined, formatMap[variant] || formatMap.long).format(date);
+    return new Intl.DateTimeFormat(
+        undefined,
+        formatMap[variant] || formatMap.long,
+    ).format(date);
 }
 
 function updateDateLabels() {
@@ -112,7 +118,9 @@ function updateDateLabels() {
         futureDate.setDate(today.getDate() + offsetDays);
 
         const formattedDate = formatDate(futureDate, "long");
-        element.textContent = timeLabel ? `${formattedDate}, ${timeLabel}` : formattedDate;
+        element.textContent = timeLabel
+            ? `${formattedDate}, ${timeLabel}`
+            : formattedDate;
 
         if (element.tagName === "TIME") {
             element.dateTime = futureDate.toISOString().split("T")[0];
@@ -176,4 +184,23 @@ function initApp() {
     setupSidebarInteractions();
 }
 
+// Home page progress elements
+const homePercent = document.querySelector(".home-percent");
+const trackPercentage = document.querySelector(".track-percentage");
+
+const renderHomeProgress = () => {
+    const { totalTasks, doneTasks } = calculateProgress(tasks);
+
+    const percent = getProgressPercentage(doneTasks, totalTasks);
+
+    if (homePercent) {
+        homePercent.textContent = `${percent}%`;
+    }
+    if (trackPercentage) {
+        trackPercentage.style.width = `${percent}%`;
+    }
+};
+
+
 initApp();
+renderHomeProgress();

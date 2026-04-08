@@ -106,7 +106,7 @@
 }
 
 .track-percentage {
-    width: 65%;
+    width: 0%;
     height: 100%;
     background: var(--accent);
     border-radius: 999px;
