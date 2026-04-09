@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Methodical | Today</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="../styles/shared.css">
+    <link rel="stylesheet" href="../styles/today.css">
+</head>
+
+<body data-current-page="today">
+    <header class="site-header">
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="app-sidebar"
+            aria-label="Open navigation">☰</button>
+        <div class="header-left-side">
+            <a href="../index.html" class="logo-box">Methodical</a>
+            <nav class="nav">
+                <ul class="nav-list">
+                    <li><a href="../index.html" data-page-key="home">Home</a></li>
+                    <li><a href="./today.html" data-page-key="today" aria-current="page">Today</a></li>
+                    <li><a href="./personal.html" data-page-key="personal">Personal</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="header-right-side">
+            <div class="search-bar" role="search">
+                <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+                <input type="text" id="search-bar-input" placeholder="Search tasks..." aria-label="Search tasks">
+            </div>
+            <button class="user-profile" type="button" aria-label="Open profile">YH</button>
+        </div>
+    </header>
+
+    <div class="dashboard-layout">
+        <aside class="side-bar" id="app-sidebar" aria-label="Sidebar">
+            <div class="side-bar-top">
+                <h2 class="side-bar-title">Workspace</h2>
+                <p class="side-bar-para">Productivity Flow</p>
+            </div>
+            <nav class="primary-nav">
+                <a href="../index.html" class="side-bar-text" data-page-key="home">
+                    <i class="fa-solid fa-house"></i>
+                    Home
+                </a>
+                <a href="./today.html" class="side-bar-text" data-page-key="today" aria-current="page">
+                    <i class="fa-solid fa-calendar-week side-bar-icons"></i>
+                    Today
+                </a>
+                <button class="side-bar-text is-disabled" type="button" disabled aria-disabled="true">
+                    <i class="fa-regular fa-calendar side-bar-icons"></i>
+                    Upcoming
+                </button>
+            </nav>
+
+            <hr class="sidebar-divider">
+
+            <div class="categories">
+                <p class="category-title">Categories</p>
+
+                <div class="category-list">
+                    <a href="./personal.html" class="side-bar-text" data-page-key="personal">
+                        <i class="fa-solid fa-user side-bar-icons"></i>
+                        Personal
+                    </a>
+                    <button class="side-bar-text is-disabled" type="button" disabled aria-disabled="true">
+                        <i class="fa-solid fa-briefcase side-bar-icons"></i>
+                        Work
+                    </button>
+                </div>
+            </div>
+
+            <div class="new-list-parent">
+                <!-- <a href="./today.html#newTaskInput" class="new-list-btn">
+                    <span class="new-list-icon"><i class="fa-solid fa-plus plus-icon"></i></span>
+                    <span>New List</span>
+                </a> -->
+            </div>
+
+            <div class="side-bar-bottom">
+                <button class="trash-btn" type="button" data-page-key="trash">
+                    <i class="fa-solid fa-trash-can"></i>
+                    Trash
+                </button>
+            </div>
+        </aside>
+
+        <main class="page-main">
+
+            <section class="userSettings">
+                <input type="text" id="userProfileInput" placeholder="Type your name">
+                <button id="submitBtn">submit</button>
+            </section>
+
+            <footer class="footer">
+                <p class="footer-signature">Thales © 2026</p>
+                <p id="taskWarning" aria-live="polite"></p>
+                <ul class="footer-list">
+                    <li class="footer-list-style">Privacy</li>
+                    <li class="footer-list-style">Documentation</li>
+                    <li class="footer-list-style">Sync Status: Active</li>
+                </ul>
+            </footer>
+        </main>
+    </div>
+
+    <script type="module" src="../index.js"></script>
+    <script src="./userProfile.js"></script>
+</body>
+</html>

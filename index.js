@@ -1,8 +1,7 @@
 import { calculateProgress, getProgressPercentage } from "./utils/progress.js";
-
-//LOAD DATA FROM LOCAL STORAGE
-const savedTasksData = JSON.parse(localStorage.getItem("savedInputsData") || "[]");
-const tasks = Array.isArray(savedTasksData) ? savedTasksData : [];
+import { getRecentTask } from "./utils/recent.js";
+import { tasks } from "./database/task.js";
+import { getUserProfileData } from "./pages/userProfile.js"
 
 // this var for width 808px and below will be considered mobile viewport
 const MOBILE_BREAKPOINT = 808;
@@ -202,5 +201,8 @@ const renderHomeProgress = () => {
 };
 
 
+
 initApp();
 renderHomeProgress();
+getRecentTask();
+getUserProfileData();
