@@ -5,8 +5,9 @@ const submitButton = document.getElementById("submitBtn");
 const getUserProfileData = () => {
     const userInputValue = userProfileInput.value.trim();
 
-    if (!userInputValue) return;
-
+    if (!userInputValue) {
+        return;
+    }
     localStorage.setItem("username", userInputValue);
 };
 

@@ -204,7 +204,10 @@ const userName = document.querySelector(".heading-right-part");
 const renderUserProfileName = () => {
     const savedUserName = localStorage.getItem("username");
     if (!savedUserName) {
-        alert('add a name!');
+        setTimeout(() => {
+            userName.textContent = 'User';
+        }, 1000);
+        alert("add a name!");
     };
 
     userName.textContent = `${savedUserName}`;
