@@ -9,6 +9,7 @@ const menuToggle = document.querySelector(".menu-toggle");
 const homePercent = document.querySelector(".home-percent");
 const trackPercentage = document.querySelector(".track-percentage");
 const userName = document.querySelector(".heading-right-part");
+const logoTrack = document.querySelector(".logo-track");
 
 let overlay = document.querySelector(".sidebar-overlay");
 
@@ -139,6 +140,20 @@ const renderUserProfileName = () => {
     userName.textContent = savedUserName;
 };
 
+const duplicateLogoTrack = () => {
+    if (!logoTrack || logoTrack.dataset.ready === "true") return;
+
+    const logoItems = Array.from(logoTrack.children);
+
+    logoItems.forEach((item) => {
+        const clone = item.cloneNode(true);
+        clone.setAttribute("aria-hidden", "true");
+        logoTrack.appendChild(clone);
+    });
+
+    logoTrack.dataset.ready = "true";
+};
+
 if (menuToggle && sideBar && overlay) {
     menuToggle.addEventListener("click", () => {
         if (!isMobileViewport()) return;
@@ -182,6 +197,7 @@ if (menuToggle && sideBar && overlay) {
 syncCurrentPageState();
 updateDateLabels();
 setSidebarState(false);
+duplicateLogoTrack();
 renderHomeProgress();
 getRecentTask();
 renderUserProfileName();

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Methodical | Profile</title>
+    <title>Methodical | Work</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -14,11 +15,10 @@
         rel="stylesheet">
 
     <link rel="stylesheet" href="../styles/shared.css">
-    <link rel="stylesheet" href="../styles/today.css">
-    <link rel="stylesheet" href="../styles/userProfile.css">
+    <link rel="stylesheet" href="../styles/personal.css">
 </head>
 
-<body data-current-page="profile">
+<body data-current-page="work">
     <header class="site-header">
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="app-sidebar"
             aria-label="Open navigation">☰</button>
@@ -29,7 +29,7 @@
                     <li><a href="../index.html" data-page-key="home">Home</a></li>
                     <li><a href="./today.html" data-page-key="today">Today</a></li>
                     <li><a href="./personal.html" data-page-key="personal">Personal</a></li>
-                    <li><a href="./work.html" data-page-key="work">Work</a></li>
+                    <li><a href="./work.html" data-page-key="work" aria-current="page">Work</a></li>
                 </ul>
             </nav>
         </div>
@@ -38,7 +38,8 @@
                 <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
                 <input type="text" id="search-bar-input" placeholder="Search tasks..." aria-label="Search tasks">
             </div>
-            <button class="user-profile" type="button" aria-label="Open profile">YH</button>
+            <a href="../pages/userProfile.html"><button class="user-profile" type="button"
+                    aria-label="Open profile">YH</button></a>
         </div>
     </header>
 
@@ -73,18 +74,18 @@
                         <i class="fa-solid fa-user side-bar-icons"></i>
                         Personal
                     </a>
-                    <a href="./work.html"><button class="side-bar-text" type="button">
+                    <button class="side-bar-text active" type="button" aria-current="page">
                         <i class="fa-solid fa-briefcase side-bar-icons"></i>
                         Work
-                    </button></a>
+                    </button>
                 </div>
             </div>
 
             <div class="new-list-parent">
-                <!-- <a href="./today.html#newTaskInput" class="new-list-btn">
+                <a href="./today.html#newTaskInput" class="new-list-btn">
                     <span class="new-list-icon"><i class="fa-solid fa-plus plus-icon"></i></span>
                     <span>New List</span>
-                </a> -->
+                </a>
             </div>
 
             <div class="side-bar-bottom">
@@ -96,18 +97,71 @@
         </aside>
 
         <main class="page-main">
-            <section class="userSettings">
-                <div class="user-name">
-                    <input type="text" id="userProfileInput" class="user-input" placeholder="Type your name">
-                    <button id="submitBtn" type="button">submit</button>
-                </div>
+            <section class="personal-hero">
+                <time class="personal-date" data-current-date="long"></time>
+                <h1 class="personal-title">Work Space</h1>
+                <div class="main-element-underline"></div>
+                <p class="personal-lead">A clear snapshot of your focus blocks, active routines, and day-to-day work priorities so your momentum stays intentional too.</p>
+            </section>
 
-                <p id="userNameMsg"></p>
+            <!-- <h3>coming soon!</h3> -->
+            <section class="personal-grid">
+                <!-- <article class="personal-card personal-card-highlight">
+                    <p class="section-label">Weekly Rhythm</p>
+                    <h2 class="personal-card-title">Balanced momentum for home, health, and relationships.</h2>
+                    <p class="personal-card-copy">You have enough space left this weekend for recovery, one house reset block, and two personal errands without crowding the calendar.</p>
+
+                    <div class="metric-row">
+                        <div class="metric-pill">
+                            <span class="metric-value">5</span>
+                            <span class="metric-label">Habits on track</span>
+                        </div>
+                        <div class="metric-pill">
+                            <span class="metric-value">2</span>
+                            <span class="metric-label">Errands left</span>
+                        </div>
+                        <div class="metric-pill">
+                            <span class="metric-value">1</span>
+                            <span class="metric-label">Quiet evening reserved</span>
+                        </div>
+                    </div>
+                </article> -->
+
+                <article class="personal-card">
+                    <div class="card-heading-row">
+                        <h2>Today's Work Priorities</h2>
+                        <span class="badge">Focus</span>
+                    </div>
+                    <div class="focus-card-container"></div>
+                </article>
+
+                <article class="personal-card">
+                    <div class="card-heading-row">
+                        <h2>Daily Anchors</h2>
+                        <span class="badge">Routine</span>
+                    </div>
+
+                    <div class="routine-grid"></div>
+                </article>
+
+                <!-- <article class="personal-card reflection-card">
+                    <div class="card-heading-row">
+                        <h2>Notes To Self</h2>
+                        <span class="badge">Reflect</span>
+                    </div>
+
+                    <p class="reflection-quote">"Protecting personal time works best when it is scheduled with the same care as important work."</p>
+
+                    <ul class="reflection-list">
+                        <li><i class="fa-solid fa-check"></i>Keep Sunday evening open for recovery instead of errands.</li>
+                        <li><i class="fa-solid fa-check"></i>Batch grocery shopping with the pharmacy run.</li>
+                        <li><i class="fa-solid fa-check"></i>Move one creative hobby block back into the week.</li>
+                    </ul>
+                </article> -->
             </section>
 
             <footer class="footer">
                 <p class="footer-signature">Thales © 2026</p>
-                <p id="taskWarning" aria-live="polite"></p>
                 <ul class="footer-list">
                     <li class="footer-list-style">Privacy</li>
                     <li class="footer-list-style">Documentation</li>
@@ -118,6 +172,7 @@
     </div>
 
     <script type="module" src="../index.js"></script>
-    <script type="module" src="userProfile.js"></script>
+    <script type="module" src="../pages/work.js"></script>
 </body>
+
 </html>
