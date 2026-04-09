@@ -114,11 +114,16 @@
                         <div class="tags-area" aria-label="Task tags">
                             <label class="visually-hidden" for="dateTimePicker">Choose a due date and time</label>
                             <input type="time" class="task-tags" id="timePicker" aria-label="Choose a due date and time">
-                            <span class="task-tags"><i class="fa-solid fa-flag"></i>
+                            <span class="task-tags">
                                 <select name="taskTag" id="priorityOptions" aria-label="Choose a task tag">
                                     <option value="" disabled selected>Priority</option>
                                     <option value="personal">Personal</option>
                                     <option value="work">Work</option>
+                                </select>
+                                <select name="taskTag" id="tasksTypeInput" aria-label="Choose a task tag">
+                                    <option value="" disabled selected>Task type</option>
+                                    <option value="Focus">Focus</option>
+                                    <option value="Routine">Routine</option>
                                 </select>
                             </span>
                         </div>

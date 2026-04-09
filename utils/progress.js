@@ -5,9 +5,14 @@ const progressStatus = document.querySelector("[data-progress-status]");
 const progressBar = document.querySelector(".progress-bar-line");
 
 export const calculateProgress = (tasks = []) => {
-    const safeTasks = Array.isArray(tasks) ? tasks : [];
-    const totalTasks = safeTasks.length;
-    const doneTasks = safeTasks.filter((task) => task.done).length;
+    let doneTasks = 0;
+    const totalTasks = tasks.length;
+
+    tasks.forEach((task) => {
+        if (task.done) {
+            doneTasks += 1;
+        }
+    });
 
     return { totalTasks, doneTasks };
 };
@@ -24,19 +29,22 @@ export const updateProgressContainer = (doneTasks, totalTasks) => {
     if (progressPara) {
         progressPara.textContent = `${doneTasks} of ${totalTasks} tasks completed`;
     }
+
     if (progressPercent) {
         progressPercent.textContent = `${percent}%`;
     }
+
     if (progressBar) {
         progressBar.style.width = `${percent}%`;
     }
-    if (progressStatus) {
-        if (totalTasks === 0) {
-            progressStatus.textContent = "Add your first task";
-        } else if (remainingTasks === 0) {
-            progressStatus.textContent = "All tasks completed";
-        } else {
-            progressStatus.textContent = `${remainingTasks} tasks left`;
-        }
+
+    if (!progressStatus) return;
+
+    if (totalTasks === 0) {
+        progressStatus.textContent = "Add your first task";
+    } else if (remainingTasks === 0) {
+        progressStatus.textContent = "All tasks completed";
+    } else {
+        progressStatus.textContent = `${remainingTasks} tasks left`;
     }
 };

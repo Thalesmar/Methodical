@@ -1,102 +1,57 @@
 // SELECT ELEMENTS FROM DOM
 import { calculateProgress, updateProgressContainer } from "../utils/progress.js";
 import { storageFunc, tasks } from "../database/task.js";
+import { escapeHtml } from "../utils/escapeHtml.js";
 
-// Task elements
 const newTaskContainer = document.querySelector(".task-list-container");
 const taskInput = document.getElementById("newTaskInput");
 const addNewTaskBtn = document.querySelector(".new-task-btn");
 const warningMsg = document.getElementById("taskWarning");
 const timeInput = document.getElementById("timePicker");
 const priorityInput = document.getElementById("priorityOptions");
+const tasksTypeInput = document.getElementById("tasksTypeInput");
 
-const getPriorityLabel = (priority) => {
-    if (!priority) {
-        return "Unsorted";
-    }
-
-    return priority.charAt(0).toUpperCase() + priority.slice(1);
-};
-
-const createIcon = (className) => {
-    const icon = document.createElement("i");
-    icon.className = className;
-    return icon;
-};
-
-const createTaskItem = (task, index) => {
-    const taskItem = document.createElement("li");
-    taskItem.className = `task-list-item ${task.done ? "done" : ""}`.trim();
-    taskItem.dataset.index = String(index);
-
-    const taskButton = document.createElement("button");
-    taskButton.className = "task-list-btn";
-    taskButton.type = "button";
-    taskButton.setAttribute("aria-label", "Mark task as complete");
-
-    const checkedSpan = document.createElement("span");
-    checkedSpan.className = "checked";
-    checkedSpan.appendChild(createIcon("fa-solid fa-check"));
-    taskButton.appendChild(checkedSpan);
-
-    const taskText = document.createElement("div");
-    taskText.className = "task-list-text";
-
-    const heading = document.createElement("h3");
-    heading.className = "task-list-heading";
-    heading.textContent = task.taskTitle;
-
-    const paragraph = document.createElement("p");
-    paragraph.className = "task-list-para";
-    paragraph.textContent = "Focus on the tonal architecture section.";
-
-    const taskDate = document.createElement("span");
-    taskDate.className = "task-list-date";
-    taskDate.append(
-        createIcon("fa-solid fa-clock"),
-        document.createTextNode(` ${task.time || "No time set"}`),
-    );
-
-    taskText.append(heading, paragraph, taskDate);
-
-    const taskRight = document.createElement("div");
-    taskRight.className = "task-list-right";
-
-    const tagsParent = document.createElement("div");
-    tagsParent.className = "task-list-tags-parent";
-
-    const tag = document.createElement("span");
-    tag.className = "task-list-tags";
-    tag.textContent = getPriorityLabel(task.priority);
-    tagsParent.appendChild(tag);
-
-    const deleteParent = document.createElement("div");
-    deleteParent.className = "del-btn-parent";
-
-    const deleteButton = document.createElement("button");
-    deleteButton.className = "del-btn task-del-btn";
-    deleteButton.type = "button";
-    deleteButton.setAttribute("aria-label", "Delete task");
-    deleteButton.appendChild(createIcon("fa-solid fa-trash"));
-    deleteParent.appendChild(deleteButton);
-
-    taskRight.append(tagsParent, deleteParent);
-    taskItem.append(taskButton, taskText, taskRight);
-
-    return taskItem;
-};
-
-//RENDER TASKS (DISPLAY UI)
+// RENDER TASKS (DISPLAY UI)
 const renderTask = () => {
-    if (!newTaskContainer) {
-        return;
-    }
+    if (!newTaskContainer) return;
 
-    newTaskContainer.replaceChildren(
-        ...tasks.map((task, index) => createTaskItem(task, index)),
-    );
+    let newTaskRender = "";
 
-    // update progress after rendering
+    tasks.forEach((task, index) => {
+        const taskTitle = escapeHtml(task.taskTitle || "Untitled task");
+        const time = escapeHtml(task.time || "No time set");
+        const priority = task.priority
+            ? escapeHtml(
+                  task.priority.charAt(0).toUpperCase() + task.priority.slice(1),
+              )
+            : "Unsorted";
+        const taskType = escapeHtml(task.taskType || "No task type");
+
+        newTaskRender += `
+            <li class="task-list-item ${task.done ? "done" : ""}" data-index="${index}">
+                <button class="task-list-btn" type="button" aria-label="Mark task as complete">
+                    <span class="checked"><i class="fa-solid fa-check"></i></span>
+                </button>
+                <div class="task-list-text">
+                    <h3 class="task-list-heading">${taskTitle}</h3>
+                    <p class="task-list-para">${taskType}</p>
+                    <span class="task-list-date">
+                        <i class="fa-solid fa-clock"></i> ${time}
+                    </span>
+                </div>
+                <div class="task-list-right">
+                    <div class="task-list-tags-parent">
+                        <span class="task-list-tags">${priority}</span>
+                    </div>
+                    <div class="del-btn-parent">
+                        <button class="del-btn task-del-btn" type="button" aria-label="Delete task"><i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </li>`;
+    });
+
+    newTaskContainer.innerHTML = newTaskRender;
     renderProgress();
 };
 
@@ -108,17 +63,23 @@ const renderProgress = () => {
 
 // ADD NEW TASK
 export const displayNewTask = () => {
-    if (!taskInput || !timeInput || !priorityInput || !warningMsg) {
+    if (
+        !taskInput ||
+        !timeInput ||
+        !priorityInput ||
+        !tasksTypeInput ||
+        !warningMsg
+    ) {
         return;
     }
 
     const newTaskValue = taskInput.value.trim();
     const newTimeValue = timeInput.value.trim();
     const newPriorityValue = priorityInput.value.trim();
+    const tasksTypeInputValue = tasksTypeInput.value.trim();
 
-    // Validation of data
-    if (!newTaskValue || !newPriorityValue) {
-        warningMsg.textContent = "Add a task and select a priority";
+    if (!newTaskValue || !newPriorityValue || !tasksTypeInputValue) {
+        warningMsg.textContent = "Add a task, priority and task type";
         warningMsg.classList.add("task-warning-text");
 
         setTimeout(() => {
@@ -129,66 +90,50 @@ export const displayNewTask = () => {
         return;
     }
 
-    // Create new task object
     const newTask = {
         taskTitle: newTaskValue,
         time: newTimeValue,
         priority: newPriorityValue,
+        taskType: tasksTypeInputValue,
         done: false,
     };
 
-    // Add to array
     tasks.push(newTask);
-    // Save + render
     storageFunc();
     renderTask();
 
-    // Reset inputs
     taskInput.value = "";
     timeInput.value = "";
     priorityInput.selectedIndex = 0;
+    tasksTypeInput.selectedIndex = 0;
 };
 
 // EVENT DELEGATION (DONE BUTTON)
-//we listen to the parent
 if (newTaskContainer) {
     newTaskContainer.addEventListener("click", (event) => {
-        //and we detect which child was clicked
-        //"Go up from the clicked element until you find .task-list-btn"
         const btn = event.target.closest(".task-list-btn");
-        //if not ignore click
         if (!btn) return;
 
-        //Find the parent task item
         const taskItem = btn.closest(".task-list-item");
-
         if (!taskItem) return;
 
-        //Get which task this is
         const index = Number(taskItem.dataset.index);
-
         if (!Number.isInteger(index) || !tasks[index]) return;
 
-        //Toggle done/undone
         tasks[index].done = !tasks[index].done;
-        //Save + re - render;
         storageFunc();
         renderTask();
     });
 
-    //DELETE TASK (EVENT DELEGATION)
+    // DELETE TASK (EVENT DELEGATION)
     newTaskContainer.addEventListener("click", (event) => {
-        const deleteBtn = event.target.closest(".del-btn");
-
-        if (!deleteBtn) return;
-
         const taskItem = event.target.closest(".task-list-item");
-
         if (!taskItem) return;
 
         const index = Number(taskItem.dataset.index);
+        const deleteBtn = event.target.closest(".del-btn");
 
-        if (!Number.isInteger(index) || !tasks[index]) return;
+        if (!deleteBtn || !Number.isInteger(index) || !tasks[index]) return;
 
         tasks.splice(index, 1);
         storageFunc();
@@ -196,10 +141,10 @@ if (newTaskContainer) {
     });
 }
 
-//ADD TASK BUTTON
+// ADD TASK BUTTON
 if (addNewTaskBtn) {
     addNewTaskBtn.addEventListener("click", displayNewTask);
 }
 
-//NITIAL RENDER ON LOAD
+// INITIAL RENDER ON LOAD
 renderTask();

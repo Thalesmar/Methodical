@@ -151,6 +151,17 @@
     background: linear-gradient(135deg, var(--primary-start), var(--primary-end));
 }
 
+.personal-item-copy{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.personal-empty-state {
+    color: var(--text-muted);
+    line-height: 1.55;
+}
+
 .personal-item-copy h3 {
     font-size: 1rem;
     line-height: 1.4;
@@ -172,6 +183,18 @@
     font-weight: 700;
     text-transform: uppercase;
 }
+.item{
+    padding: 0.38rem 0.65rem;
+    max-width: 6rem;
+    background: var(--surface-soft);
+    border-radius: 999px;
+    color: var(--text-muted);
+    font-size: 0.74rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+    border: 1px solid gray;
+}
 
 
 .routine-grid {
@@ -181,10 +204,21 @@
 }
 
 .routine-card {
+    display: flex;
+    align-items: left;
+    gap: 7px;
+    flex-direction: column;
     padding: 1rem;
     background: var(--surface-soft);
     border-radius: 16px;
 }
+
+.routine-card-null{
+    background: transparent;
+    border: 1px dashed var(--border-soft);
+}
+
+
 
 .routine-time {
     display: inline-block;

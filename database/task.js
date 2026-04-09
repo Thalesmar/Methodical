@@ -9,32 +9,23 @@ const normalizeTask = (task) => {
         time: typeof safeTask.time === "string" ? safeTask.time : "",
         priority:
             typeof safeTask.priority === "string" ? safeTask.priority : "",
+        taskType:
+            typeof safeTask.taskType === "string" ? safeTask.taskType : "",
         done: Boolean(safeTask.done),
     };
 };
 
-const loadTasks = () => {
-    try {
-        const rawTasks = localStorage.getItem(STORAGE_KEY);
+let savedTasksData = [];
 
-        if (!rawTasks) {
-            return [];
-        }
+try {
+    savedTasksData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+} catch {
+    savedTasksData = [];
+}
 
-        const parsedTasks = JSON.parse(rawTasks);
-
-        if (!Array.isArray(parsedTasks)) {
-            return [];
-        }
-
-        return parsedTasks.map(normalizeTask);
-    } catch (error) {
-        console.warn("Unable to read saved tasks from localStorage.", error);
-        return [];
-    }
-};
-
-export const tasks = loadTasks();
+export const tasks = Array.isArray(savedTasksData)
+    ? savedTasksData.map(normalizeTask)
+    : [];
 
 export const storageFunc = () => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));

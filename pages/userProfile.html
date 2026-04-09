@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Methodical | Today</title>
+    <title>Methodical | Profile</title>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="../styles/userProfile.css">
 </head>
 
-<body data-current-page="today">
+<body data-current-page="profile">
     <header class="site-header">
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="app-sidebar"
             aria-label="Open navigation">☰</button>
@@ -27,7 +27,7 @@
             <nav class="nav">
                 <ul class="nav-list">
                     <li><a href="../index.html" data-page-key="home">Home</a></li>
-                    <li><a href="./today.html" data-page-key="today" aria-current="page">Today</a></li>
+                    <li><a href="./today.html" data-page-key="today">Today</a></li>
                     <li><a href="./personal.html" data-page-key="personal">Personal</a></li>
                 </ul>
             </nav>
@@ -52,7 +52,7 @@
                     <i class="fa-solid fa-house"></i>
                     Home
                 </a>
-                <a href="./today.html" class="side-bar-text" data-page-key="today" aria-current="page">
+                <a href="./today.html" class="side-bar-text" data-page-key="today">
                     <i class="fa-solid fa-calendar-week side-bar-icons"></i>
                     Today
                 </a>
@@ -96,9 +96,9 @@
 
         <main class="page-main">
             <section class="userSettings">
-                <div class="search-bar">
-                <input type="text" id="userProfileInput" class="user-input" placeholder="Type your name">
-                <button id="submitBtn" type="button">submit</button>
+                <div class="user-name">
+                    <input type="text" id="userProfileInput" class="user-input" placeholder="Type your name">
+                    <button id="submitBtn" type="button">submit</button>
                 </div>
             </section>
 

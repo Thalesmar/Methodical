@@ -648,8 +648,8 @@
     align-items: center;
 }
 
-#priorityOptions{
-
+#priorityOptions,
+#tasksTypeInput{
     border: none;
     outline: none;
     background: none;
@@ -657,6 +657,8 @@
     min-width: 0;
     color: inherit;
 }
+
+
 
 @media (max-width: 1116px) {
     .new-task-container {

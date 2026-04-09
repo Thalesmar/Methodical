@@ -2,42 +2,32 @@ import { calculateProgress, getProgressPercentage } from "./utils/progress.js";
 import { getRecentTask } from "./utils/recent.js";
 import { tasks } from "./database/task.js";
 
-// this var for width 808px and below will be considered mobile viewport
 const MOBILE_BREAKPOINT = 808;
 
+const sideBar = document.querySelector(".side-bar");
+const menuToggle = document.querySelector(".menu-toggle");
+const homePercent = document.querySelector(".home-percent");
+const trackPercentage = document.querySelector(".track-percentage");
+const userName = document.querySelector(".heading-right-part");
+
+let overlay = document.querySelector(".sidebar-overlay");
+
+if (!overlay) {
+    overlay = document.createElement("button");
+    overlay.type = "button";
+    overlay.className = "sidebar-overlay";
+    overlay.setAttribute("aria-label", "Close navigation");
+    overlay.setAttribute("aria-hidden", "true");
+    overlay.tabIndex = -1;
+    document.body.appendChild(overlay);
+}
+
 const isMobileViewport = () => {
-    return window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT}px)`).matches;
+    return window.innerWidth <= MOBILE_BREAKPOINT;
 };
 
-const getOverlay = () => {
-    let overlay = document.querySelector(".sidebar-overlay");
-
-    if (!overlay) {
-        overlay = document.createElement("button");
-        overlay.type = "button";
-        overlay.className = "sidebar-overlay";
-        overlay.setAttribute("aria-label", "Close navigation");
-        overlay.tabIndex = -1;
-        document.body.appendChild(overlay);
-    }
-
-    return overlay;
-};
-
-const getNavigationElements = () => {
-    return {
-        sideBar: document.querySelector(".side-bar"),
-        menuToggle: document.querySelector(".menu-toggle"),
-        overlay: getOverlay(),
-    };
-};
-
-function setSidebarState(isOpen, elements) {
-    const { sideBar, menuToggle, overlay } = elements;
-
-    if (!sideBar || !menuToggle) {
-        return;
-    }
+const setSidebarState = (isOpen) => {
+    if (!sideBar || !menuToggle || !overlay) return;
 
     const shouldOpen = isMobileViewport() && isOpen;
 
@@ -48,32 +38,17 @@ function setSidebarState(isOpen, elements) {
         shouldOpen ? "Close navigation" : "Open navigation",
     );
 
-    sideBar.setAttribute(
-        "aria-hidden",
-        String(isMobileViewport() && !shouldOpen),
-    );
+    sideBar.setAttribute("aria-hidden", String(isMobileViewport() && !shouldOpen));
     overlay.setAttribute("aria-hidden", String(!shouldOpen));
-}
+};
 
-function closeSidebar(elements) {
-    setSidebarState(false, elements);
-}
-
-function toggleSidebar(elements) {
-    const isOpen = document.body.classList.contains("nav-open");
-    setSidebarState(!isOpen, elements);
-}
-
-function syncCurrentPageState() {
+const syncCurrentPageState = () => {
     const currentPage = document.body.dataset.currentPage;
     const pageItems = document.querySelectorAll("[data-page-key]");
 
-    if (!currentPage || pageItems.length === 0) {
-        return;
-    }
-
     pageItems.forEach((item) => {
         const isCurrent = item.dataset.pageKey === currentPage;
+
         item.classList.toggle("active", isCurrent);
 
         if (isCurrent) {
@@ -82,24 +57,31 @@ function syncCurrentPageState() {
             item.removeAttribute("aria-current");
         }
     });
-}
+};
 
-function formatDate(date, variant) {
-    const formatMap = {
-        long: { weekday: "long", month: "long", day: "numeric" },
-        short: { month: "short", day: "numeric" },
+const formatDate = (date, variant) => {
+    let formatOptions = {
+        weekday: "long",
+        month: "long",
+        day: "numeric",
     };
 
-    return new Intl.DateTimeFormat(
-        undefined,
-        formatMap[variant] || formatMap.long,
-    ).format(date);
-}
+    if (variant === "short") {
+        formatOptions = {
+            month: "short",
+            day: "numeric",
+        };
+    }
 
-function updateDateLabels() {
+    return new Intl.DateTimeFormat(undefined, formatOptions).format(date);
+};
+
+const updateDateLabels = () => {
     const today = new Date();
+    const currentDateElements = document.querySelectorAll("[data-current-date]");
+    const futureDateElements = document.querySelectorAll("[data-future-date]");
 
-    document.querySelectorAll("[data-current-date]").forEach((element) => {
+    currentDateElements.forEach((element) => {
         const variant = element.dataset.currentDate || "long";
         element.textContent = formatDate(today, variant);
 
@@ -108,61 +90,84 @@ function updateDateLabels() {
         }
     });
 
-    document.querySelectorAll("[data-future-date]").forEach((element) => {
-        const offsetDays = Number(element.dataset.futureDate || "0");
-        const timeLabel = element.dataset.timeLabel?.trim();
+    futureDateElements.forEach((element) => {
+        const offsetDays = Number(element.dataset.futureDate || 0);
+        const timeLabel = element.dataset.timeLabel
+            ? element.dataset.timeLabel.trim()
+            : "";
         const futureDate = new Date(today);
 
         futureDate.setDate(today.getDate() + offsetDays);
 
         const formattedDate = formatDate(futureDate, "long");
-        element.textContent = timeLabel
-            ? `${formattedDate}, ${timeLabel}`
-            : formattedDate;
+
+        if (timeLabel) {
+            element.textContent = `${formattedDate}, ${timeLabel}`;
+        } else {
+            element.textContent = formattedDate;
+        }
 
         if (element.tagName === "TIME") {
             element.dateTime = futureDate.toISOString().split("T")[0];
         }
     });
-}
+};
 
-function setupSidebarInteractions() {
-    const elements = getNavigationElements();
-    const { sideBar, menuToggle, overlay } = elements;
+const renderHomeProgress = () => {
+    const { doneTasks, totalTasks } = calculateProgress(tasks);
+    const percent = getProgressPercentage(doneTasks, totalTasks);
 
-    if (!sideBar || !menuToggle) {
+    if (homePercent) {
+        homePercent.textContent = `${percent}%`;
+    }
+
+    if (trackPercentage) {
+        trackPercentage.style.width = `${percent}%`;
+    }
+};
+
+const renderUserProfileName = () => {
+    if (!userName) return;
+
+    const savedUserName = localStorage.getItem("username");
+
+    if (!savedUserName) {
+        userName.textContent = "User";
         return;
     }
 
-    menuToggle.addEventListener("click", () => {
-        if (!isMobileViewport()) {
-            return;
-        }
+    userName.textContent = savedUserName;
+};
 
-        toggleSidebar(elements);
+if (menuToggle && sideBar && overlay) {
+    menuToggle.addEventListener("click", () => {
+        if (!isMobileViewport()) return;
+
+        const isOpen = document.body.classList.contains("nav-open");
+        setSidebarState(!isOpen);
     });
 
-    overlay.addEventListener("click", () => closeSidebar(elements));
+    overlay.addEventListener("click", () => {
+        setSidebarState(false);
+    });
 
     sideBar.addEventListener("click", (event) => {
         const clickedItem = event.target.closest("a, button");
 
-        if (!clickedItem || !isMobileViewport()) {
-            return;
-        }
+        if (!clickedItem || !isMobileViewport()) return;
 
-        closeSidebar(elements);
+        setSidebarState(false);
     });
 
     document.addEventListener("keydown", (event) => {
         if (event.key === "Escape") {
-            closeSidebar(elements);
+            setSidebarState(false);
         }
     });
 
     window.addEventListener("resize", () => {
         if (!isMobileViewport()) {
-            closeSidebar(elements);
+            setSidebarState(false);
             sideBar.setAttribute("aria-hidden", "false");
             return;
         }
@@ -172,49 +177,11 @@ function setupSidebarInteractions() {
             String(!document.body.classList.contains("nav-open")),
         );
     });
-
-    setSidebarState(false, elements);
 }
 
-function initApp() {
-    syncCurrentPageState();
-    updateDateLabels();
-    setupSidebarInteractions();
-}
-
-// Home page progress elements
-const homePercent = document.querySelector(".home-percent");
-const trackPercentage = document.querySelector(".track-percentage");
-
-const renderHomeProgress = () => {
-    const { totalTasks, doneTasks } = calculateProgress(tasks);
-
-    const percent = getProgressPercentage(doneTasks, totalTasks);
-
-    if (homePercent) {
-        homePercent.textContent = `${percent}%`;
-    }
-    if (trackPercentage) {
-        trackPercentage.style.width = `${percent}%`;
-    }
-};
-
-const userName = document.querySelector(".heading-right-part");
-
-const renderUserProfileName = () => {
-    const savedUserName = localStorage.getItem("username");
-    if (!savedUserName) {
-        setTimeout(() => {
-            userName.textContent = 'User';
-        }, 1000);
-        alert("add a name!");
-    };
-
-    userName.textContent = `${savedUserName}`;
-}
-
-
-initApp();
+syncCurrentPageState();
+updateDateLabels();
+setSidebarState(false);
 renderHomeProgress();
 getRecentTask();
 renderUserProfileName();
