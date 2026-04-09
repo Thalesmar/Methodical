@@ -1,7 +1,6 @@
 import { calculateProgress, getProgressPercentage } from "./utils/progress.js";
 import { getRecentTask } from "./utils/recent.js";
 import { tasks } from "./database/task.js";
-// import { getUserProfileData } from "./pages/userProfile.js"
 
 // this var for width 808px and below will be considered mobile viewport
 const MOBILE_BREAKPOINT = 808;
@@ -200,9 +199,19 @@ const renderHomeProgress = () => {
     }
 };
 
+const userName = document.querySelector(".heading-right-part");
+
+const renderUserProfileName = () => {
+    const savedUserName = localStorage.getItem("username");
+    if (!savedUserName) {
+        alert('add a name!');
+    };
+
+    userName.textContent = `${savedUserName}`;
+}
 
 
 initApp();
 renderHomeProgress();
 getRecentTask();
-// getUserProfileData();
+renderUserProfileName();

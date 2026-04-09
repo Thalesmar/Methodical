@@ -1,11 +1,13 @@
-// const userProfileInput = document.getElementById("userProfileInput");
-// const submitBtn = document.getElementById("submitBtn");
-// const headingRightPart = document.getElementById('.heading-right-part');
+const userProfileInput = document.getElementById("userProfileInput");
+const submitButton = document.getElementById("submitBtn");
 
 
-// export const getUserProfileData = () => {
-//     const userInputValue = userProfileInput.value.trim();
-//     headingRightPart.textContent = `${userInputValue}`;
-// }
+const getUserProfileData = () => {
+    const userInputValue = userProfileInput.value.trim();
 
-// submitBtn.addEventListener("click", getUserProfileData);
+    if (!userInputValue) return;
+
+    localStorage.setItem("username", userInputValue);
+};
+
+submitButton.addEventListener("click", getUserProfileData);

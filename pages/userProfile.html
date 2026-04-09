@@ -15,6 +15,7 @@
 
     <link rel="stylesheet" href="../styles/shared.css">
     <link rel="stylesheet" href="../styles/today.css">
+    <link rel="stylesheet" href="../styles/userProfile.css">
 </head>
 
 <body data-current-page="today">
@@ -94,10 +95,11 @@
         </aside>
 
         <main class="page-main">
-
             <section class="userSettings">
-                <input type="text" id="userProfileInput" placeholder="Type your name">
-                <button id="submitBtn">submit</button>
+                <div class="search-bar">
+                <input type="text" id="userProfileInput" class="user-input" placeholder="Type your name">
+                <button id="submitBtn" type="button">submit</button>
+                </div>
             </section>
 
             <footer class="footer">
@@ -113,6 +115,6 @@
     </div>
 
     <script type="module" src="../index.js"></script>
-    <!-- <script src="./userProfile.js"></script> -->
+    <script type="module" src="userProfile.js"></script>
 </body>
 </html>

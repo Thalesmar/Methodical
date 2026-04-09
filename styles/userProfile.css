@@ -1,0 +1,24 @@
+.user-input{
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--text-main);
+    font-size: 0.95rem;
+}
+
+.user-input:focus-within {
+    border: none;
+    outline: none;
+}
+
+#submitBtn{
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 0.7rem 1.3rem;
+    color: white;
+    font-size: 0.92rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--primary-start), var(--primary-end));
+}
