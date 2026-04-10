@@ -1,6 +1,7 @@
 import { calculateProgress, getProgressPercentage } from "./utils/progress.js";
 import { getRecentTask } from "./utils/recent.js";
 import { tasks } from "./database/task.js";
+import { getCompletedStreak } from "./utils/streak.js";
 
 const MOBILE_BREAKPOINT = 808;
 
@@ -12,6 +13,8 @@ const userName = document.querySelector(".heading-right-part");
 const logoTrack = document.querySelector(".logo-track");
 
 let overlay = document.querySelector(".sidebar-overlay");
+
+const renderStreak = document.querySelector(".hero-cards .card-heading");
 
 if (!overlay) {
     overlay = document.createElement("button");
@@ -194,6 +197,15 @@ if (menuToggle && sideBar && overlay) {
     });
 }
 
+const renderFocusStreak = () => {
+    if (!renderStreak) return;
+
+    const streak = getCompletedStreak(tasks);
+    const dayLabel = streak === 1 ? "Day" : "Days";
+
+    renderStreak.textContent = `${streak} ${dayLabel}`;
+};
+
 syncCurrentPageState();
 updateDateLabels();
 setSidebarState(false);
@@ -201,3 +213,4 @@ duplicateLogoTrack();
 renderHomeProgress();
 getRecentTask();
 renderUserProfileName();
+renderFocusStreak();

@@ -2,6 +2,7 @@
 import { calculateProgress, updateProgressContainer } from "../utils/progress.js";
 import { storageFunc, tasks } from "../database/task.js";
 import { escapeHtml } from "../utils/escapeHtml.js";
+import { getLocalDateString } from "../utils/streak.js";
 
 const newTaskContainer = document.querySelector(".task-list-container");
 const taskInput = document.getElementById("newTaskInput");
@@ -95,6 +96,7 @@ export const displayNewTask = () => {
         time: newTimeValue,
         priority: newPriorityValue,
         taskType: tasksTypeInputValue,
+        completedAt: null,
         done: false,
     };
 
@@ -121,6 +123,13 @@ if (newTaskContainer) {
         if (!Number.isInteger(index) || !tasks[index]) return;
 
         tasks[index].done = !tasks[index].done;
+
+        if (tasks[index].done) {
+            tasks[index].completedAt = getLocalDateString();
+        } else {
+            tasks[index].completedAt = null;
+        }
+
         storageFunc();
         renderTask();
     });

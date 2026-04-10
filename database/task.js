@@ -11,6 +11,8 @@ const normalizeTask = (task) => {
             typeof safeTask.priority === "string" ? safeTask.priority : "",
         taskType:
             typeof safeTask.taskType === "string" ? safeTask.taskType : "",
+        completedAt:
+            typeof safeTask.completedAt === "string" ? safeTask.completedAt : null,
         done: Boolean(safeTask.done),
     };
 };
