@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +15,6 @@
         rel="stylesheet">
 
     <link rel="stylesheet" href="../styles/shared.css">
-    <link rel="stylesheet" href="../styles/today.css">
     <link rel="stylesheet" href="../styles/userProfile.css">
 </head>
 
@@ -38,7 +38,7 @@
                 <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
                 <input type="text" id="search-bar-input" placeholder="Search tasks..." aria-label="Search tasks">
             </div>
-            <button class="user-profile" type="button" aria-label="Open profile">YH</button>
+            <button class="user-profile" type="button" aria-label="Open profile"><img src="../assets/user-profile.png" alt=""></button>
         </div>
     </header>
 
@@ -47,6 +47,10 @@
             <div class="side-bar-top">
                 <h2 class="side-bar-title">Workspace</h2>
                 <p class="side-bar-para">Productivity Flow</p>
+            </div>
+            <div class="sidebar-search" role="search">
+                <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+                <input type="text" class="sidebar-search-input" placeholder="Search tasks..." aria-label="Search tasks">
             </div>
             <nav class="primary-nav">
                 <a href="../index.html" class="side-bar-text" data-page-key="home">
@@ -73,19 +77,14 @@
                         <i class="fa-solid fa-user side-bar-icons"></i>
                         Personal
                     </a>
-                    <a href="./work.html"><button class="side-bar-text" type="button">
+                    <a href="./work.html" class="side-bar-text" data-page-key="work">
                         <i class="fa-solid fa-briefcase side-bar-icons"></i>
                         Work
-                    </button></a>
+                    </a>
                 </div>
             </div>
 
-            <div class="new-list-parent">
-                <!-- <a href="./today.html#newTaskInput" class="new-list-btn">
-                    <span class="new-list-icon"><i class="fa-solid fa-plus plus-icon"></i></span>
-                    <span>New List</span>
-                </a> -->
-            </div>
+            <div class="new-list-parent"></div>
 
             <div class="side-bar-bottom">
                 <button class="trash-btn" type="button" data-page-key="trash">
@@ -95,14 +94,188 @@
             </div>
         </aside>
 
-        <main class="page-main">
-            <section class="userSettings">
-                <div class="user-name">
-                    <input type="text" id="userProfileInput" class="user-input" placeholder="Type your name">
-                    <button id="submitBtn" type="button">submit</button>
-                </div>
+        <main class="page-main user-page-main">
+            <section class="profile-shell">
+                <header class="profile-hero">
+                    <h1 class="settings-heading">Settings</h1>
+                </header>
 
-                <p id="userNameMsg"></p>
+                <article class="user-info-container" aria-labelledby="profileOverviewTitle">
+                    <div class="user-left-side">
+                        <div class="user-img-section">
+                            <img src="../assets/user-profile.png" class="user-img" alt="Julian Thorne profile photo">
+                            <span class="avatar-edit-badge" aria-hidden="true">
+                                <i class="fa-solid fa-pen"></i>
+                            </span>
+                        </div>
+                        <div class="user-right-side">
+                            <h2 class="user-fullname" id="profileOverviewTitle">Julian Thorne</h2>
+                            <p class="user-email">julian.thorne@methodical.io</p>
+                            <div class="subplan-tag-parent">
+                                <span class="user-subplan">Pro Plan</span>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <section class="preferences-section" aria-labelledby="accountPreferencesHeading">
+                    <div class="preferences-label-row">
+                        <span class="preferences-icon" aria-hidden="true">
+                            <i class="fa-regular fa-circle-user"></i>
+                        </span>
+                        <h2 class="preference-heading" id="accountPreferencesHeading">Account Preferences</h2>
+                    </div>
+
+                    <section class="user-input-settings" aria-label="Account preference form">
+                        <div class="input-group">
+                            <label for="userNameInput">Display Name</label>
+                            <input type="text" id="userNameInput" class="username-input" placeholder="">
+                        </div>
+
+                        <div class="input-group">
+                            <label for="userEmailInput">Email Address</label>
+                            <input type="email" class="user-email-input" id="userEmailInput" placeholder="">
+                        </div>
+
+                        <div class="form-actions">
+                            <button id="submitBtn" type="button">Save Changes</button>
+                            <p id="userNameMsg" class="form-status" aria-live="polite"></p>
+                        </div>
+                    </section>
+
+                    <div class="preferences-label-row">
+                        <span class="preferences-icon" aria-hidden="true">
+                            <i class="fa-regular fa-bell"></i>
+                        </span>
+                        <h2 class="preference-heading" id="notificationSettingsHeading">Notification Settings</h2>
+                    </div>
+
+                    <article class="settings-card settings-card-soft" aria-labelledby="notificationSettingsHeading">
+                        <div class="settings-row">
+                            <div class="settings-row-left">
+                                <span class="settings-item-icon" aria-hidden="true">
+                                    <i class="fa-regular fa-envelope"></i>
+                                </span>
+                                <div class="settings-item-copy">
+                                    <h3 class="settings-item-title">Email Summaries</h3>
+                                </div>
+                            </div>
+                            <button
+                                type="button"
+                                class="setting-switch is-on"
+                                id="emailSummariesToggle"
+                                aria-label="Toggle email summaries"
+                                aria-pressed="true"
+                            >
+                                <span class="setting-switch-thumb" aria-hidden="true"></span>
+                            </button>
+                        </div>
+
+                        <div class="settings-row">
+                            <div class="settings-row-left">
+                                <span class="settings-item-icon" aria-hidden="true">
+                                    <i class="fa-solid fa-mobile-screen-button"></i>
+                                </span>
+                                <div class="settings-item-copy">
+                                    <h3 class="settings-item-title">Push Notifications</h3>
+                                </div>
+                            </div>
+                            <button
+                                type="button"
+                                class="setting-switch"
+                                id="pushNotificationsToggle"
+                                aria-label="Toggle push notifications"
+                                aria-pressed="false"
+                            >
+                                <span class="setting-switch-thumb" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </article>
+
+                    <div class="preferences-label-row">
+                        <span class="preferences-icon" aria-hidden="true">
+                            <i class="fa-solid fa-palette"></i>
+                        </span>
+                        <h2 class="preference-heading" id="themeSettingsHeading">Theme / System</h2>
+                    </div>
+
+                    <article class="settings-card settings-card-solid" aria-labelledby="themeSettingsHeading">
+                        <button class="settings-action-row" type="button" aria-label="Open interface theme settings">
+                            <div class="settings-row-left">
+                                <span class="settings-item-icon" aria-hidden="true">
+                                    <i class="fa-regular fa-moon"></i>
+                                </span>
+                                <div class="settings-item-copy">
+                                    <h3 class="settings-item-title">Interface Theme</h3>
+                                    <p class="settings-item-subtitle">System Default</p>
+                                </div>
+                            </div>
+                            <span class="settings-row-trailing" aria-hidden="true">
+                                <i class="fa-solid fa-angle-right"></i>
+                            </span>
+                        </button>
+
+                        <button class="settings-action-row" type="button" aria-label="Open language settings">
+                            <div class="settings-row-left">
+                                <span class="settings-item-icon" aria-hidden="true">
+                                    <i class="fa-solid fa-globe"></i>
+                                </span>
+                                <div class="settings-item-copy">
+                                    <h3 class="settings-item-title">Language</h3>
+                                    <p class="settings-item-subtitle">English (US)</p>
+                                </div>
+                            </div>
+                            <span class="settings-row-trailing" aria-hidden="true">
+                                <i class="fa-solid fa-angle-right"></i>
+                            </span>
+                        </button>
+                    </article>
+
+                    <div class="preferences-label-row">
+                        <span class="preferences-icon" aria-hidden="true">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </span>
+                        <h2 class="preference-heading" id="securitySettingsHeading">Security</h2>
+                    </div>
+
+                    <article class="settings-card settings-card-solid" aria-labelledby="securitySettingsHeading">
+                        <button class="settings-action-row" type="button" aria-label="Change password">
+                            <div class="settings-row-left">
+                                <span class="settings-item-icon" aria-hidden="true">
+                                    <i class="fa-solid fa-key"></i>
+                                </span>
+                                <div class="settings-item-copy">
+                                    <h3 class="settings-item-title">Change Password</h3>
+                                </div>
+                            </div>
+                            <span class="settings-row-trailing" aria-hidden="true">
+                                <i class="fa-solid fa-angle-right"></i>
+                            </span>
+                        </button>
+
+                        <button class="settings-action-row" type="button" aria-label="Manage two-factor authentication">
+                            <div class="settings-row-left">
+                                <span class="settings-item-icon" aria-hidden="true">
+                                    <i class="fa-solid fa-shield"></i>
+                                </span>
+                                <div class="settings-item-copy">
+                                    <h3 class="settings-item-title">Two-Factor Auth</h3>
+                                </div>
+                            </div>
+                            <span class="settings-status">Enabled</span>
+                        </button>
+                    </article>
+
+                    <div class="settings-divider" aria-hidden="true"></div>
+
+                    <article class="delete-account-card" aria-labelledby="deleteAccountHeading">
+                        <div class="delete-account-copy">
+                            <h2 class="delete-account-title" id="deleteAccountHeading">Delete Account</h2>
+                            <p class="delete-account-text">Permanently remove your data and workspace access.</p>
+                        </div>
+                        <button class="delete-account-button" type="button">Delete Account</button>
+                    </article>
+                </section>
             </section>
 
             <footer class="footer">
@@ -120,4 +293,5 @@
     <script type="module" src="../index.js"></script>
     <script type="module" src="userProfile.js"></script>
 </body>
+
 </html>

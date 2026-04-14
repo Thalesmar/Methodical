@@ -3,7 +3,7 @@ import { getRecentTask } from "./utils/recent.js";
 import { tasks } from "./database/task.js";
 import { getCompletedStreak } from "./utils/streak.js";
 
-const MOBILE_BREAKPOINT = 808;
+const MOBILE_BREAKPOINT = 878;
 
 const sideBar = document.querySelector(".side-bar");
 const menuToggle = document.querySelector(".menu-toggle");
