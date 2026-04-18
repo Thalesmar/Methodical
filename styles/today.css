@@ -1,6 +1,7 @@
 .main-element-header-parent {
-    max-width: 1120px;
-    margin: 0 auto 3rem;
+    grid-column: 1;
+    max-width: none;
+    margin: 0 0 1rem;
     display: flex;
     flex-direction: column;
     gap: 0.75rem;

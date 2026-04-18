@@ -1,4 +1,4 @@
-import { tasks } from "../database/task.js";
+import { tasks } from "../utils/taskStorage.js";
 import { escapeHtml } from "../utils/escapeHtml.js";
 
 const personalRoutineParent = document.querySelector(".routine-grid");

@@ -1,6 +1,6 @@
 import { calculateProgress, getProgressPercentage } from "./utils/progress.js";
 import { getRecentTask } from "./utils/recent.js";
-import { tasks } from "./database/task.js";
+import { tasks } from "./utils/taskStorage.js";
 import { getCompletedStreak } from "./utils/streak.js";
 
 const MOBILE_BREAKPOINT = 878;

@@ -1,8 +1,9 @@
 // SELECT ELEMENTS FROM DOM
 import { calculateProgress, updateProgressContainer } from "../utils/progress.js";
-import { storageFunc, tasks } from "../database/task.js";
+// import { storageFunc, tasks } from "../utils/taskStorage.js";
 import { escapeHtml } from "../utils/escapeHtml.js";
 import { getLocalDateString } from "../utils/streak.js";
+// import { error } from "node:console";
 
 const newTaskContainer = document.querySelector(".task-list-container");
 const taskInput = document.getElementById("newTaskInput");
@@ -13,6 +14,8 @@ const priorityInput = document.getElementById("priorityOptions");
 const tasksTypeInput = document.getElementById("tasksTypeInput");
 
 // RENDER TASKS (DISPLAY UI)
+
+const tasks = [];
 const renderTask = () => {
     if (!newTaskContainer) return;
 
@@ -62,8 +65,25 @@ const renderProgress = () => {
     updateProgressContainer(doneTasks, totalTasks);
 };
 
+const loadTask = async () => {
+    try {
+        const response = await fetch("http://localhost:8000/api/tasks");
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.message || "Failed to load tasks");
+        }
+
+        //empty the arr
+        tasks.length = 0;
+        tasks.push(...data.tasksData);
+        renderTask();
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 // ADD NEW TASK
-export const displayNewTask = () => {
+export const displayNewTask = async() => {
     if (
         !taskInput ||
         !timeInput ||
@@ -91,23 +111,50 @@ export const displayNewTask = () => {
         return;
     }
 
-    const newTask = {
-        taskTitle: newTaskValue,
-        time: newTimeValue,
-        priority: newPriorityValue,
-        taskType: tasksTypeInputValue,
-        completedAt: null,
-        done: false,
-    };
+    //fetching data from backend
+    try {
+        const response = await fetch("http://localhost:8000/api/tasks", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                taskTitle: newTaskValue,
+                time: newTimeValue,
+                priority: newPriorityValue,
+                taskType: tasksTypeInputValue,
+            }),
+        });
 
-    tasks.push(newTask);
-    storageFunc();
-    renderTask();
+        const data = await response.json();
+
+        if (!response.ok) {
+            warningMsg.textContent = data.message;
+            return;
+        }
+        warningMsg.textContent = data.message;
+    } catch (error) {
+        console.log(error);
+    }
+
+    //useless local update after adding backend
+    // const newTask = {
+    //     taskTitle: newTaskValue,
+    //     time: newTimeValue,
+    //     priority: newPriorityValue,
+    //     taskType: tasksTypeInputValue,
+    //     completedAt: null,
+    //     done: false,
+    // };
+
+    // tasks.push(newTask);
+    // storageFunc();
+    // renderTask();
 
     taskInput.value = "";
     timeInput.value = "";
     priorityInput.selectedIndex = 0;
     tasksTypeInput.selectedIndex = 0;
+
+    await loadTask();
 };
 
 // EVENT DELEGATION (DONE BUTTON)
@@ -130,7 +177,7 @@ if (newTaskContainer) {
             tasks[index].completedAt = null;
         }
 
-        storageFunc();
+        // storageFunc();
         renderTask();
     });
 
@@ -145,7 +192,7 @@ if (newTaskContainer) {
         if (!deleteBtn || !Number.isInteger(index) || !tasks[index]) return;
 
         tasks.splice(index, 1);
-        storageFunc();
+        // storageFunc();
         renderTask();
     });
 }
@@ -157,3 +204,4 @@ if (addNewTaskBtn) {
 
 // INITIAL RENDER ON LOAD
 renderTask();
+await loadTask();

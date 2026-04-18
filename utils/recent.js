@@ -1,4 +1,4 @@
-import { tasks } from "../database/task.js";
+import { tasks } from "./taskStorage.js";
 import { escapeHtml } from "./escapeHtml.js";
 
 const activityListParent = document.querySelector(".activity-list-parent");
