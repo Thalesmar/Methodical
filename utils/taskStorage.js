@@ -1,34 +1,61 @@
-const STORAGE_KEY = "savedInputsData";
+const API_BASE_URL = "http://localhost:8000/api";
 
-const normalizeTask = (task) => {
-    const safeTask = task && typeof task === "object" ? task : {};
+const getJson = async (response, fallbackMessage) => {
+    const data = await response.json();
 
+    if (!response.ok) {
+        throw new Error(data.message || fallbackMessage);
+    }
+
+    return data;
+};
+
+const normalizeTask = (task = {}) => {
     return {
-        taskTitle:
-            typeof safeTask.taskTitle === "string" ? safeTask.taskTitle : "",
-        time: typeof safeTask.time === "string" ? safeTask.time : "",
-        priority:
-            typeof safeTask.priority === "string" ? safeTask.priority : "",
-        taskType:
-            typeof safeTask.taskType === "string" ? safeTask.taskType : "",
+        id: typeof task.id === "string" ? task.id : "",
+        taskTitle: typeof task.taskTitle === "string" ? task.taskTitle : "",
+        time: typeof task.time === "string" ? task.time : "",
+        priority: typeof task.priority === "string" ? task.priority : "",
+        taskType: typeof task.taskType === "string" ? task.taskType : "",
         completedAt:
-            typeof safeTask.completedAt === "string" ? safeTask.completedAt : null,
-        done: Boolean(safeTask.done),
+            typeof task.completedAt === "string" ? task.completedAt : null,
+        done: Boolean(task.done),
     };
 };
 
-let savedTasksData = [];
+export const fetchTasks = async () => {
+    const response = await fetch(`${API_BASE_URL}/tasks`);
+    const data = await getJson(response, "Failed to load tasks");
 
-try {
-    savedTasksData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-} catch {
-    savedTasksData = [];
-}
+    return Array.isArray(data.tasksData)
+        ? data.tasksData.map(normalizeTask)
+        : [];
+};
 
-export const tasks = Array.isArray(savedTasksData)
-    ? savedTasksData.map(normalizeTask)
-    : [];
+export const createTask = async (task) => {
+    const response = await fetch(`${API_BASE_URL}/tasks`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(task),
+    });
 
-export const storageFunc = () => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+    return getJson(response, "Failed to create task");
+};
+
+export const updateTask = async (taskId, updates) => {
+    const response = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updates),
+    });
+
+    return getJson(response, "Failed to update task");
+};
+
+export const deleteTask = async (taskId) => {
+    const response = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
+        method: "DELETE",
+    });
+
+    return getJson(response, "Failed to delete task");
 };

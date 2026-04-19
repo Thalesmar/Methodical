@@ -1,9 +1,12 @@
-// SELECT ELEMENTS FROM DOM
 import { calculateProgress, updateProgressContainer } from "../utils/progress.js";
-// import { storageFunc, tasks } from "../utils/taskStorage.js";
+import {
+    createTask,
+    deleteTask,
+    fetchTasks,
+    updateTask,
+} from "../utils/taskStorage.js";
 import { escapeHtml } from "../utils/escapeHtml.js";
 import { getLocalDateString } from "../utils/streak.js";
-// import { error } from "node:console";
 
 const newTaskContainer = document.querySelector(".task-list-container");
 const taskInput = document.getElementById("newTaskInput");
@@ -13,9 +16,20 @@ const timeInput = document.getElementById("timePicker");
 const priorityInput = document.getElementById("priorityOptions");
 const tasksTypeInput = document.getElementById("tasksTypeInput");
 
-// RENDER TASKS (DISPLAY UI)
-
 const tasks = [];
+
+const showMessage = (message, shouldHighlight = false) => {
+    if (!warningMsg) return;
+
+    warningMsg.textContent = message;
+    warningMsg.classList.toggle("task-warning-text", shouldHighlight);
+};
+
+const renderProgress = () => {
+    const { doneTasks, totalTasks } = calculateProgress(tasks);
+    updateProgressContainer(doneTasks, totalTasks);
+};
+
 const renderTask = () => {
     if (!newTaskContainer) return;
 
@@ -59,31 +73,19 @@ const renderTask = () => {
     renderProgress();
 };
 
-const renderProgress = () => {
-    const { doneTasks, totalTasks } = calculateProgress(tasks);
-
-    updateProgressContainer(doneTasks, totalTasks);
-};
-
 const loadTask = async () => {
     try {
-        const response = await fetch("http://localhost:8000/api/tasks");
-        const data = await response.json();
-        if (!response.ok) {
-            throw new Error(data.message || "Failed to load tasks");
-        }
-
-        //empty the arr
+        const fetchedTasks = await fetchTasks();
         tasks.length = 0;
-        tasks.push(...data.tasksData);
+        tasks.push(...fetchedTasks);
         renderTask();
     } catch (error) {
         console.log(error);
+        showMessage(error.message || "Failed to load tasks", true);
     }
-}
+};
 
-// ADD NEW TASK
-export const displayNewTask = async() => {
+export const displayNewTask = async () => {
     if (
         !taskInput ||
         !timeInput ||
@@ -100,66 +102,39 @@ export const displayNewTask = async() => {
     const tasksTypeInputValue = tasksTypeInput.value.trim();
 
     if (!newTaskValue || !newPriorityValue || !tasksTypeInputValue) {
-        warningMsg.textContent = "Add a task, priority and task type";
-        warningMsg.classList.add("task-warning-text");
+        showMessage("Add a task, priority and task type", true);
 
         setTimeout(() => {
-            warningMsg.textContent = "";
-            warningMsg.classList.remove("task-warning-text");
+            showMessage("", false);
         }, 3000);
 
         return;
     }
 
-    //fetching data from backend
     try {
-        const response = await fetch("http://localhost:8000/api/tasks", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                taskTitle: newTaskValue,
-                time: newTimeValue,
-                priority: newPriorityValue,
-                taskType: tasksTypeInputValue,
-            }),
+        const data = await createTask({
+            taskTitle: newTaskValue,
+            time: newTimeValue,
+            priority: newPriorityValue,
+            taskType: tasksTypeInputValue,
         });
 
-        const data = await response.json();
+        showMessage(data.message || "Task created successfully");
 
-        if (!response.ok) {
-            warningMsg.textContent = data.message;
-            return;
-        }
-        warningMsg.textContent = data.message;
+        taskInput.value = "";
+        timeInput.value = "";
+        priorityInput.selectedIndex = 0;
+        tasksTypeInput.selectedIndex = 0;
+
+        await loadTask();
     } catch (error) {
         console.log(error);
+        showMessage(error.message || "Failed to create task", true);
     }
-
-    //useless local update after adding backend
-    // const newTask = {
-    //     taskTitle: newTaskValue,
-    //     time: newTimeValue,
-    //     priority: newPriorityValue,
-    //     taskType: tasksTypeInputValue,
-    //     completedAt: null,
-    //     done: false,
-    // };
-
-    // tasks.push(newTask);
-    // storageFunc();
-    // renderTask();
-
-    taskInput.value = "";
-    timeInput.value = "";
-    priorityInput.selectedIndex = 0;
-    tasksTypeInput.selectedIndex = 0;
-
-    await loadTask();
 };
 
-// EVENT DELEGATION (DONE BUTTON)
 if (newTaskContainer) {
-    newTaskContainer.addEventListener("click", (event) => {
+    newTaskContainer.addEventListener("click", async (event) => {
         const btn = event.target.closest(".task-list-btn");
         if (!btn) return;
 
@@ -167,41 +142,51 @@ if (newTaskContainer) {
         if (!taskItem) return;
 
         const index = Number(taskItem.dataset.index);
-        if (!Number.isInteger(index) || !tasks[index]) return;
+        const task = Number.isInteger(index) ? tasks[index] : null;
 
-        tasks[index].done = !tasks[index].done;
+        if (!task?.id) return;
 
-        if (tasks[index].done) {
-            tasks[index].completedAt = getLocalDateString();
-        } else {
-            tasks[index].completedAt = null;
+        const nextDoneState = !task.done;
+
+        try {
+            await updateTask(task.id, {
+                done: nextDoneState,
+                completedAt: nextDoneState ? getLocalDateString() : null,
+            });
+
+            await loadTask();
+        } catch (error) {
+            console.log(error);
+            showMessage(error.message || "Failed to update task", true);
         }
-
-        // storageFunc();
-        renderTask();
     });
 
-    // DELETE TASK (EVENT DELEGATION)
-    newTaskContainer.addEventListener("click", (event) => {
+    newTaskContainer.addEventListener("click", async (event) => {
         const taskItem = event.target.closest(".task-list-item");
         if (!taskItem) return;
 
-        const index = Number(taskItem.dataset.index);
         const deleteBtn = event.target.closest(".del-btn");
+        if (!deleteBtn) return;
 
-        if (!deleteBtn || !Number.isInteger(index) || !tasks[index]) return;
+        const index = Number(taskItem.dataset.index);
+        const task = Number.isInteger(index) ? tasks[index] : null;
 
-        tasks.splice(index, 1);
-        // storageFunc();
-        renderTask();
+        if (!task?.id) return;
+
+        try {
+            const data = await deleteTask(task.id);
+            showMessage(data.message || "Task deleted successfully");
+            await loadTask();
+        } catch (error) {
+            console.log(error);
+            showMessage(error.message || "Failed to delete task", true);
+        }
     });
 }
 
-// ADD TASK BUTTON
 if (addNewTaskBtn) {
     addNewTaskBtn.addEventListener("click", displayNewTask);
 }
 
-// INITIAL RENDER ON LOAD
 renderTask();
 await loadTask();

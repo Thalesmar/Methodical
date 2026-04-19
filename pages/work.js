@@ -1,4 +1,4 @@
-import { tasks } from "../utils/taskStorage.js";
+import { fetchTasks } from "../utils/taskStorage.js";
 import { escapeHtml } from "../utils/escapeHtml.js";
 
 const workRoutineParent = document.querySelector(".routine-grid");
@@ -8,16 +8,12 @@ const isWorkTask = (task) => {
     return task.priority.trim().toLowerCase() === "work";
 };
 
-const getTaskTypeTasks = (taskType) => {
-    return tasks.filter((task) => {
-        return isWorkTask(task) && task.taskType === taskType;
-    });
-};
-
-const renderWorkRoutineTasks = () => {
+const renderWorkRoutineTasks = (tasks) => {
     if (!workRoutineParent) return;
 
-    const routineTasks = getTaskTypeTasks("Routine");
+    const routineTasks = tasks.filter((task) => {
+        return isWorkTask(task) && task.taskType === "Routine";
+    });
 
     if (routineTasks.length === 0) {
         workRoutineParent.innerHTML = `
@@ -47,10 +43,12 @@ const renderWorkRoutineTasks = () => {
     workRoutineParent.innerHTML = routineHtml;
 };
 
-const renderWorkFocusTasks = () => {
+const renderWorkFocusTasks = (tasks) => {
     if (!workFocusParent) return;
 
-    const focusTasks = getTaskTypeTasks("Focus");
+    const focusTasks = tasks.filter((task) => {
+        return isWorkTask(task) && task.taskType === "Focus";
+    });
 
     if (focusTasks.length === 0) {
         workFocusParent.innerHTML = `
@@ -81,5 +79,29 @@ const renderWorkFocusTasks = () => {
     workFocusParent.innerHTML = focusHtml;
 };
 
-renderWorkRoutineTasks();
-renderWorkFocusTasks();
+const initWorkPage = async () => {
+    try {
+        const tasks = await fetchTasks();
+        renderWorkRoutineTasks(tasks);
+        renderWorkFocusTasks(tasks);
+    } catch (error) {
+        console.log(error);
+
+        if (workRoutineParent) {
+            workRoutineParent.innerHTML = `
+                <div class="routine-card routine-card-null">
+                    <h3>Unable to load tasks</h3>
+                    <p>Please make sure the backend is running and try again.</p>
+                </div>`;
+        }
+
+        if (workFocusParent) {
+            workFocusParent.innerHTML = `
+                <p class="personal-empty-state">
+                    Unable to load focus tasks right now.
+                </p>`;
+        }
+    }
+};
+
+await initWorkPage();

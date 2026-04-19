@@ -1,7 +1,8 @@
 import { calculateProgress, getProgressPercentage } from "./utils/progress.js";
 import { getRecentTask } from "./utils/recent.js";
-import { tasks } from "./utils/taskStorage.js";
+import { fetchTasks } from "./utils/taskStorage.js";
 import { getCompletedStreak } from "./utils/streak.js";
+import { fetchUserProfile } from "./utils/userProfileApi.js";
 
 const MOBILE_BREAKPOINT = 878;
 
@@ -117,7 +118,7 @@ const updateDateLabels = () => {
     });
 };
 
-const renderHomeProgress = () => {
+const renderHomeProgressData = (tasks) => {
     const { doneTasks, totalTasks } = calculateProgress(tasks);
     const percent = getProgressPercentage(doneTasks, totalTasks);
 
@@ -130,17 +131,18 @@ const renderHomeProgress = () => {
     }
 };
 
-const renderUserProfileName = () => {
+const renderUserProfileName = async () => {
     if (!userName) return;
 
-    const savedUserName = localStorage.getItem("username");
+    try {
+        const profile = await fetchUserProfile();
+        const displayName = profile?.displayName?.trim();
 
-    if (!savedUserName) {
+        userName.textContent = displayName || "User";
+    } catch (error) {
+        console.log(error);
         userName.textContent = "User";
-        return;
     }
-
-    userName.textContent = savedUserName;
 };
 
 const duplicateLogoTrack = () => {
@@ -197,7 +199,7 @@ if (menuToggle && sideBar && overlay) {
     });
 }
 
-const renderFocusStreak = () => {
+const renderFocusStreak = (tasks) => {
     if (!renderStreak) return;
 
     const streak = getCompletedStreak(tasks);
@@ -206,11 +208,32 @@ const renderFocusStreak = () => {
     renderStreak.textContent = `${streak} ${dayLabel}`;
 };
 
+const initDashboardData = async () => {
+    try {
+        const tasks = await fetchTasks();
+        renderHomeProgressData(tasks);
+        renderFocusStreak(tasks);
+    } catch (error) {
+        console.log(error);
+
+        if (homePercent) {
+            homePercent.textContent = "0%";
+        }
+
+        if (trackPercentage) {
+            trackPercentage.style.width = "0%";
+        }
+
+        if (renderStreak) {
+            renderStreak.textContent = "0 Days";
+        }
+    }
+
+    await Promise.all([getRecentTask(), renderUserProfileName()]);
+};
+
 syncCurrentPageState();
 updateDateLabels();
 setSidebarState(false);
 duplicateLogoTrack();
-renderHomeProgress();
-getRecentTask();
-renderUserProfileName();
-renderFocusStreak();
+await initDashboardData();

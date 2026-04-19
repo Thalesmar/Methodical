@@ -1,4 +1,4 @@
-import { tasks } from "../utils/taskStorage.js";
+import { fetchTasks } from "../utils/taskStorage.js";
 import { escapeHtml } from "../utils/escapeHtml.js";
 
 const personalRoutineParent = document.querySelector(".routine-grid");
@@ -8,16 +8,12 @@ const isPersonalTask = (task) => {
     return task.priority.trim().toLowerCase() === "personal";
 };
 
-const getTaskTypeTasks = (taskType) => {
-    return tasks.filter((task) => {
-        return isPersonalTask(task) && task.taskType === taskType;
-    });
-};
-
-const renderPersonalRoutineTasks = () => {
+const renderPersonalRoutineTasks = (tasks) => {
     if (!personalRoutineParent) return;
 
-    const routineTasks = getTaskTypeTasks("Routine");
+    const routineTasks = tasks.filter((task) => {
+        return isPersonalTask(task) && task.taskType === "Routine";
+    });
 
     if (routineTasks.length === 0) {
         personalRoutineParent.innerHTML = `
@@ -47,10 +43,12 @@ const renderPersonalRoutineTasks = () => {
     personalRoutineParent.innerHTML = routineHtml;
 };
 
-const renderPersonalFocusTasks = () => {
+const renderPersonalFocusTasks = (tasks) => {
     if (!personalFocusParent) return;
 
-    const focusTasks = getTaskTypeTasks("Focus");
+    const focusTasks = tasks.filter((task) => {
+        return isPersonalTask(task) && task.taskType === "Focus";
+    });
 
     if (focusTasks.length === 0) {
         personalFocusParent.innerHTML = `
@@ -81,5 +79,29 @@ const renderPersonalFocusTasks = () => {
     personalFocusParent.innerHTML = focusHtml;
 };
 
-renderPersonalRoutineTasks();
-renderPersonalFocusTasks();
+const initPersonalPage = async () => {
+    try {
+        const tasks = await fetchTasks();
+        renderPersonalRoutineTasks(tasks);
+        renderPersonalFocusTasks(tasks);
+    } catch (error) {
+        console.log(error);
+
+        if (personalRoutineParent) {
+            personalRoutineParent.innerHTML = `
+                <div class="routine-card routine-card-null">
+                    <h3>Unable to load tasks</h3>
+                    <p>Please make sure the backend is running and try again.</p>
+                </div>`;
+        }
+
+        if (personalFocusParent) {
+            personalFocusParent.innerHTML = `
+                <p class="personal-empty-state">
+                    Unable to load focus tasks right now.
+                </p>`;
+        }
+    }
+};
+
+await initPersonalPage();

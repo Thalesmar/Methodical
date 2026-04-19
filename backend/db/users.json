@@ -3,11 +3,12 @@
     "id": 1,
     "name": "Yassine",
     "age": 23,
-    "displayName": "test"
+    "displayName": "thales"
   },
   {
     "id": 2,
     "name": "Ali",
-    "age": 25
+    "age": 25,
+    "displayName": ""
   }
 ]
