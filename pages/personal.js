@@ -1,5 +1,5 @@
-import { fetchTasks } from "../utils/taskStorage.js";
 import { escapeHtml } from "../utils/escapeHtml.js";
+import { fetchTasks } from "../utils/tasksApi.js";
 
 const personalRoutineParent = document.querySelector(".routine-grid");
 const personalFocusParent = document.querySelector(".focus-card-container");

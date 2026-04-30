@@ -1,15 +1,35 @@
 import express from "express";
 import { readUsers, writeUsers } from "../services/userService.js";
+import { verifyToken } from "../middlewares/authMiddleware.js";
 
 const userRouter = express.Router();
 
-userRouter.get("/profile", async (req, res) => {
+const findUserFromToken = (users, tokenUser) => {
+    return users.find((user) => {
+        return user.username === tokenUser.username || user.email === tokenUser.email;
+    });
+};
+
+const toSafeProfile = (user) => {
+    if (!user) return null;
+
+    const { password, ...safeProfile } = user;
+    return safeProfile;
+};
+
+userRouter.get("/profile", verifyToken, async (req, res) => {
     try {
         const users = await readUsers();
-        const profile = users[0] || null;
+        const profile = findUserFromToken(users, req.user);
+
+        if (!profile) {
+            return res.status(404).json({
+                message: "Profile not found",
+            });
+        }
 
         res.status(200).json({
-            profile,
+            profile: toSafeProfile(profile),
             message: "Profile loaded successfully",
         });
     } catch (error) {
@@ -20,39 +40,38 @@ userRouter.get("/profile", async (req, res) => {
     }
 });
 
-userRouter.put("/profile", async (req, res) => {
+userRouter.put("/profile", verifyToken, async (req, res) => {
     try {
         const { displayName } = req.body;
 
         if (!displayName || !displayName.trim()) {
-            res.status(400).json({
+            return res.status(400).json({
                 message: "Display name is required",
             });
-            return;
         }
 
         const users = await readUsers();
         const trimmedDisplayName = displayName.trim();
+        const userIndex = users.findIndex((user) => {
+            return user.username === req.user.username || user.email === req.user.email;
+        });
 
-        if (users.length === 0) {
-            users.push({
-                id: 1,
-                name: "",
-                age: null,
-                displayName: trimmedDisplayName,
+        if (userIndex === -1) {
+            return res.status(404).json({
+                message: "Profile not found",
             });
-        } else {
-            users[0] = {
-                ...users[0],
-                displayName: trimmedDisplayName,
-            };
         }
+
+        users[userIndex] = {
+            ...users[userIndex],
+            displayName: trimmedDisplayName,
+        };
 
         await writeUsers(users);
 
         res.status(200).json({
             message: "Profile updated successfully",
-            profile: users[0],
+            profile: toSafeProfile(users[userIndex]),
         });
     } catch (error) {
         console.log(error);

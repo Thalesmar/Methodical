@@ -41,7 +41,15 @@
                 <span class="search-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
                 <input type="text" id="search-bar-input" placeholder="Search tasks..." aria-label="Search tasks">
             </div>
-            <a href="./pages/userProfile.html"><button class="user-profile" type="button" aria-label="Open profile"><img src="./assets/user-profile.png" alt=""></button></a>
+            <div class="auth">
+                <a href="./pages/signIn.html"><span class="sign-in-styles">sign in</span></a>
+                <a href="./pages/signUp.html"><span class="sign-up-styles">sign up</span></a>
+            </div>
+            <div class="profile">
+                <a href="./pages/userProfile.html" class="user-profile" aria-label="Open profile"><img
+                src="./assets/user-profile.png" alt=""></a>
+            </div>
+
         </div>
     </header>
 
@@ -82,10 +90,10 @@
                         <i class="fa-solid fa-user side-bar-icons"></i>
                         Personal
                     </a>
-                    <a href="./pages/work.html"><button class="side-bar-text" type="button">
+                    <a href="./pages/work.html" class="side-bar-text" data-page-key="work">
                         <i class="fa-solid fa-briefcase side-bar-icons"></i>
                         Work
-                    </button></a>
+                    </a>
                 </div>
             </div>
 
@@ -155,7 +163,7 @@
                         <span class="feature-title">Innovation</span>
                         <h2 class="feature-heading">Mindful Productivity</h2>
                         <p class="feature-para">Experience a workspace that adapts to your cognitive load. No clutter, no noise—just pure focus.</p>
-                        <a href="./pages/today.html"><button class="try-btn" type="button">Try Methodical Now <i class="fa-solid fa-arrow-right"></i></button></a>
+                        <a href="./pages/today.html" class="try-btn">Try Methodical Now <i class="fa-solid fa-arrow-right"></i></a>
                     </div>
                     <div class="feature-img-section">
                         <img src="./assets/todo-list.jpg" class="feature-img-styles" alt="Minimal workspace desk setup" width="640" height="320" decoding="async" fetchpriority="high">

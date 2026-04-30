@@ -4,6 +4,7 @@ import {
 } from "../utils/userProfileApi.js";
 
 const userProfileInput = document.getElementById("userNameInput");
+const userEmailInput = document.getElementById("userEmailInput");
 const submitButton = document.getElementById("submitBtn");
 const userNameMsg = document.getElementById("userNameMsg");
 
@@ -26,13 +27,16 @@ const loadUserProfile = async () => {
     try {
         const profile = await fetchUserProfile();
         userProfileInput.value = profile?.displayName || "";
+        if (userEmailInput) {
+            userEmailInput.value = profile?.email || "";
+        }
     } catch (error) {
-        console.log("Error:", error);
+        showUserMessage(error.message || "Please sign in to view your profile", true);
     }
 };
 
 const getUserProfileData = async () => {
-    if (!userProfileInput || !userNameMsg) return;
+    if (!userProfileInput || !userNameMsg || !submitButton) return;
 
     const userInputValue = userProfileInput.value.trim();
 
@@ -42,13 +46,14 @@ const getUserProfileData = async () => {
     }
 
     try {
+        submitButton.disabled = true;
         const data = await updateUserProfile(userInputValue);
-        console.log("Backend response:", data);
         showUserMessage(data.message || "Username has been added successfully");
         userProfileInput.value = data.profile?.displayName || userInputValue;
     } catch (error) {
-        console.log("Error:", error);
         showUserMessage(error.message || "Failed to save display name", true);
+    } finally {
+        submitButton.disabled = false;
     }
 };
 

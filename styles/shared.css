@@ -162,7 +162,7 @@ input:focus-visible {
     min-width: 10rem;
     padding: 0.8rem 1rem;
     background: var(--surface-soft);
-    border: 1px solid transparent;
+    border: 1px solid #d8dcff;
     border-radius: 12px;
     transition: border-color 0.25s ease, box-shadow 0.25s ease;
 }
@@ -220,6 +220,38 @@ input:focus-visible {
 
 .sidebar-search-input::placeholder {
     color: var(--text-muted);
+}
+
+.auth{
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile{
+    display: none;
+}
+
+.sign-in-styles {
+    font-weight: 500;
+}
+.sign-up-styles{
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+.sign-in-styles:hover,
+.sign-up-styles:hover {
+    cursor: pointer;
+    color: gray;
+    border-color:gray;
+}
+
+.profile-logo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .user-profile,

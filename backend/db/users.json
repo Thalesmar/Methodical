@@ -1,14 +1,7 @@
 [
   {
-    "id": 1,
-    "name": "Yassine",
-    "age": 23,
-    "displayName": "thales"
-  },
-  {
-    "id": 2,
-    "name": "Ali",
-    "age": 25,
-    "displayName": ""
+    "username": "marwani",
+    "email": "marwani415@gmail.com",
+    "password": "$2b$10$vkxvwG4K7A2SSdxWyIBSBOG03hHJru5rNUkfE09v1vU6uSiLJ65YW"
   }
 ]
