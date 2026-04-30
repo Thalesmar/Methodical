@@ -8,6 +8,7 @@ const filePath = path.join(__dirname, "../db/users.json");
 
 const normalizeUser = (user = {}, index = 0) => {
     return {
+        ...user,
         id:
             typeof user.id === "number" || typeof user.id === "string"
                 ? user.id

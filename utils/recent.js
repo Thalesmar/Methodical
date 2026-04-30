@@ -1,13 +1,13 @@
-import { fetchTasks } from "./taskStorage.js";
 import { escapeHtml } from "./escapeHtml.js";
+import { fetchTasks } from "./tasksApi.js";
 
 const activityListParent = document.querySelector(".activity-list-parent");
 
-export const getRecentTask = async () => {
+export const getRecentTask = async (tasksFromPage = null) => {
     if (!activityListParent) return;
 
     try {
-        const tasks = await fetchTasks();
+        const tasks = tasksFromPage || await fetchTasks();
         const recentTasks = tasks.slice(-3).reverse();
         let html = "";
 

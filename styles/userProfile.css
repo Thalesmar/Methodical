@@ -396,7 +396,7 @@
 .delete-account-button {
     border: none;
     padding: 0.95rem 1.55rem;
-    border-radius: 0;
+    border-radius: 10px;
     background: #d32222;
     color: white;
     font-size: 0.98rem;

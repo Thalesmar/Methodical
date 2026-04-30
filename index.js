@@ -1,8 +1,8 @@
 import { calculateProgress, getProgressPercentage } from "./utils/progress.js";
 import { getRecentTask } from "./utils/recent.js";
-import { fetchTasks } from "./utils/taskStorage.js";
 import { getCompletedStreak } from "./utils/streak.js";
 import { fetchUserProfile } from "./utils/userProfileApi.js";
+import { fetchTasks } from "./utils/tasksApi.js";
 
 const MOBILE_BREAKPOINT = 878;
 
@@ -12,6 +12,8 @@ const homePercent = document.querySelector(".home-percent");
 const trackPercentage = document.querySelector(".track-percentage");
 const userName = document.querySelector(".heading-right-part");
 const logoTrack = document.querySelector(".logo-track");
+const displayProfile = document.querySelector(".profile");
+const authLinks = document.querySelector(".auth");
 
 let overlay = document.querySelector(".sidebar-overlay");
 
@@ -208,11 +210,32 @@ const renderFocusStreak = (tasks) => {
     renderStreak.textContent = `${streak} ${dayLabel}`;
 };
 
+const syncAuthState = () => {
+    const isLoggedIn = Boolean(localStorage.getItem("token"));
+
+    if (authLinks) {
+        authLinks.hidden = isLoggedIn;
+    }
+
+    if (displayProfile) {
+        displayProfile.hidden = !isLoggedIn;
+    }
+};
+
 const initDashboardData = async () => {
+    const needsTaskStats = homePercent || trackPercentage || renderStreak;
+    const needsRecentTasks = document.querySelector(".activity-list-parent");
+    let tasks = null;
+
     try {
-        const tasks = await fetchTasks();
-        renderHomeProgressData(tasks);
-        renderFocusStreak(tasks);
+        if (needsTaskStats || needsRecentTasks) {
+            tasks = await fetchTasks();
+        }
+
+        if (tasks && needsTaskStats) {
+            renderHomeProgressData(tasks);
+            renderFocusStreak(tasks);
+        }
     } catch (error) {
         console.log(error);
 
@@ -229,11 +252,23 @@ const initDashboardData = async () => {
         }
     }
 
-    await Promise.all([getRecentTask(), renderUserProfileName()]);
+    const pageJobs = [];
+
+    if (needsRecentTasks) {
+        pageJobs.push(getRecentTask(tasks));
+    }
+
+    if (userName && localStorage.getItem("token")) {
+        pageJobs.push(renderUserProfileName());
+    }
+
+    await Promise.all(pageJobs);
 };
 
 syncCurrentPageState();
+syncAuthState();
 updateDateLabels();
 setSidebarState(false);
 duplicateLogoTrack();
 await initDashboardData();
+// updateUI();

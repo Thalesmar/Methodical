@@ -1,0 +1,19 @@
+POST http://localhost:8080/api/tasks
+Content-Type: application/json
+
+{
+  "taskTitle": "hello world",
+  "time": "2026-04-02T10:13",
+  "priority": "Work",
+  "taskType": "Focus"
+}
+
+# 
+
+POST http://localhost:8080/api/auth/signup
+
+{
+  "username": "fjahfa",
+  "email": "fjahfa@gmail.com",
+  "password": "jfjkafjq92381431"
+}
